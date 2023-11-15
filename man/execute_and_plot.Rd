@@ -4,7 +4,7 @@
 \alias{execute_and_plot}
 \title{Execute the Optimization Process and Plot Results}
 \usage{
-execute_and_plot(iteration_max = 10, scan_rate = 7)
+execute_and_plot(iteration_max = 30, scan_rate = 7)
 }
 \arguments{
 \item{iteration_max}{The maximum number of iterations for the optimization process (default: 30).}
@@ -19,5 +19,5 @@ optimization over iterations.
 This function performs an optimization process to determine the optimal tile
 positions in a gene sequence and plots the progression of the score over iterations.
 It reads the overhang fidelity data, computes the optimal number of tiles, and iteratively
-improves the positions, plotting the score at each iteration.
+improves the positions, plotting the change in score with respect to number of iterations at the end.
 }

@@ -11,7 +11,7 @@ vignette: >
 # Introduction
 The TRexDAD package offers tools for optimizing gene editing designs. This vignette demonstrates the use of key functions in the package.
 
-## Installation
+# Installation
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -29,26 +29,40 @@ devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
 # Load the package
 library(TRexDAD)
 ```
+# Package Overview
 
-To list all functions available in the package:
-```
+To list all user-accessible functions, run:
 ```{r}
-lsf.str("package:TRexDAD")
+ls("package:TRexDAD")
 ```
 
-To list all sample datasets available in the package:
-``` r
-data(package = "DeregGenes")
-```
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+`TRexDAD` contains 10 functions.
+
+1.  ***execute_and_plot*** is the work flow function which wraps up most of the other functions. It performs an optimization process to determine the optimal tile positions in a gene sequence and plots the progression of the score over iterations. It provides two customization parameters: `iteration_max` and `scan_rate`. If not other specified, these parameter will have default values: `iteration_max=30`, `scan_rate=7`.
+
+2.  ***split_into_codons*** takes a gene sequence (as a string) and splits it into codons.
+
+3.  ***oligo_cost*** calculates the cost of oligonucleotides (oligos) based on 
+the number of tiles and the number of codons.
+
+4. ***calculate_optimal_tiles*** calculates the oligo cost for a range of tile numbers and finds the number of tiles that minimizes this cost. It also computes the global length of the tiles.
+
+5. ***get_overhangs*** calculates the overhang sequences at the specified positions in a gene sequence. Depending on the flag, it returns these sequences as either `DNAString` objects or plain character strings.
+
+6. ***get_all_overhangs*** computes overhang sequences for a given list of positions in a gene sequence. It iteratively calls the `get_overhangs` function to calculate the head and tail overhangs for each position and accumulates them in a list.
+
+7. ***obtain_score*** calculates a score for a specific tile within a gene sequence. The score is based on palindromicity, length variation from a global standard, and on-target reactivity, using a pre-defined overhang fidelity dataframe.
+
+8. ***calculate_scores*** calculates a global score for a list of positions in a gene sequence. The score takes into account off-target reactions, repetitions, and the sum of local scores (by calling `obtain_score`). 
+9. ***pick_position*** selects a position from a list of positions for optimization based on their scores. It uses a weighted sampling approach where the weights are inversely proportional to the scores of the positions.
+
+10. ***optimize_position*** optimizes a single position within a list of positions. It adjusts the specified position to maximize the overall score (obtained via `calculate_scores`). The function supports different optimization modes, including greedy and Markov Chain Monte Carlo (MCMC) approaches.
+
+# Workflow Usage
+The main objective of the package is to find optimal assembly design in mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a 5′-3′ flap exo/endonuclease, which is significant for DNA replication.
+
+To initiate workflow (with visualization of scores), run:
+```{r}
+execute_and_plot()
 ```
 
-```{r setup}
-require("devtools")
-devtools::install_github("yunyicheng/TRexDAD")
-library(TRexDAD)
-```

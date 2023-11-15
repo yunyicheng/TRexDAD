@@ -9,7 +9,7 @@ library(readxl)
 #' This function performs an optimization process to determine the optimal tile
 #' positions in a gene sequence and plots the progression of the score over iterations.
 #' It reads the overhang fidelity data, computes the optimal number of tiles, and iteratively
-#' improves the positions, plotting the score at each iteration.
+#' improves the positions, plotting the change in score with respect to number of iterations at the end.
 #'
 #' @param iteration_max The maximum number of iterations for the optimization process (default: 30).
 #' @param scan_rate The range within which to scan for optimizing tile positions (default: 7).
@@ -20,7 +20,7 @@ library(readxl)
 #' @import readxl
 #' 
 #' @export
-execute_and_plot <- function(iteration_max=10, scan_rate=7) {
+execute_and_plot <- function(iteration_max=30, scan_rate=7) {
     
     # Read overhang fidelity chart
     overhang_fidelity <<- read_excel("inst/extdata/overhang_fidelity.xlsx",
@@ -101,4 +101,4 @@ execute_and_plot <- function(iteration_max=10, scan_rate=7) {
     plot(x_data, y_data, type = "b", col = "blue", xlab = "Iteration", ylab = "Score", main = "Score Optimization Over Iterations")
     
 }
-execute_and_plot()
+#execute_and_plot()
