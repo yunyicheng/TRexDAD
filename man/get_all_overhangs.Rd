@@ -20,9 +20,3 @@ in a gene sequence. It iteratively calls the \code{get_overhangs} function to
 calculate the head and tail overhangs for each position and accumulates
 them in a list.
 }
-\examples{
-# Assuming pos_lst and target_gene are predefined
-pos_lst <- c(1, 5, 10)
-target_gene <- c("ATG", "GCT", "TGA", "AGT", "CTA")
-get_all_overhangs(pos_lst)
-}

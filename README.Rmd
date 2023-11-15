@@ -86,6 +86,8 @@ To initiate workflow (with visualization of scores), run:
 ```{r}
 execute_and_plot()
 ```
+It would return a graph like:
+![Alt text](man/figures/README-unnamed-chunk-4-1.png?raw=true "Title")
 
 ## Contributions
 
@@ -130,7 +132,8 @@ This package was developed as part of an assessment for 2023 BCB410H: Applied Bi
 
 
 ## Package Structure
-
+The package tree structure is provided below:
+```r
 .
 |____man
 | |____execute_and_plot.Rd
@@ -168,51 +171,11 @@ This package was developed as part of an assessment for 2023 BCB410H: Applied Bi
 |____DESCRIPTION
 |____.gitignore
 |____TRexDAD.Rproj
-|____.git
-| |____config
-| |____objects
-| | |____pack
-| | | |____pack-b02e77c7fc3175ae7a0d927428f92b5241fed994.idx
-| | | |____pack-b02e77c7fc3175ae7a0d927428f92b5241fed994.pack
-| | |____info
-| |____HEAD
-| |____info
-| | |____exclude
-| |____logs
-| | |____HEAD
-| | |____refs
-| | | |____heads
-| | | | |____main
-| | | |____remotes
-| | | | |____origin
-| | | | | |____HEAD
-| |____description
-| |____hooks
-| | |____commit-msg.sample
-| | |____pre-rebase.sample
-| | |____pre-commit.sample
-| | |____applypatch-msg.sample
-| | |____fsmonitor-watchman.sample
-| | |____pre-receive.sample
-| | |____prepare-commit-msg.sample
-| | |____post-update.sample
-| | |____pre-merge-commit.sample
-| | |____pre-applypatch.sample
-| | |____pre-push.sample
-| | |____update.sample
-| | |____push-to-checkout.sample
-| |____refs
-| | |____heads
-| | | |____main
-| | |____tags
-| | |____remotes
-| | | |____origin
-| | | | |____HEAD
-| |____index
-| |____packed-refs
 |____inst
 | |____.DS_Store
 | |____extdata
 | | |____overhang_fidelity.xlsx
 |____README.Rmd
 |____.Rproj.user
+```
+

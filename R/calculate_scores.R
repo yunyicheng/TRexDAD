@@ -53,11 +53,6 @@ get_overhangs <- function(start, end, flag) {
 #'
 #' @importFrom Biostrings DNAString
 #' @export
-#' @examples
-#' # Assuming pos_lst and target_gene are predefined
-#' pos_lst <- c(1, 5, 10)
-#' target_gene <- c("ATG", "GCT", "TGA", "AGT", "CTA")
-#' get_all_overhangs(pos_lst)
 get_all_overhangs <- function(pos_lst) {
     all_overhangs <- list()
     
