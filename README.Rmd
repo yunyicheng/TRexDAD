@@ -40,7 +40,7 @@ To install the latest version of the package:
 install.packages("devtools")
 library("devtools")
 devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
-library("TestingPackage")
+library("TRexDAD")
 ```
 
 <!-- To run the Shiny app: -->
@@ -69,7 +69,7 @@ browseVignettes("TRexDAD")
 
 The package also contains two RNA sequencing datasets, called GeneCounts and GeneCounts2. Refer to package vignettes for more details. An overview of the package is illustrated below.
 
-![](./inst/extdata/SILVA_A_A1.png)
+
 
 ## Contributions
 

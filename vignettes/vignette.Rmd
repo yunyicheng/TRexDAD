@@ -1,0 +1,54 @@
+---
+title: "Tutorial for TRexDAD Package"
+author: "Yunyi Cheng"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial for TRexDAD Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+# Introduction
+The TRexDAD package offers tools for optimizing gene editing designs. This vignette demonstrates the use of key functions in the package.
+
+## Installation
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+require("devtools")
+# Install from GitHub
+devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
+# Load the package
+library(TRexDAD)
+```
+
+To list all functions available in the package:
+```
+```{r}
+lsf.str("package:TRexDAD")
+```
+
+To list all sample datasets available in the package:
+``` r
+data(package = "DeregGenes")
+```
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+require("devtools")
+devtools::install_github("yunyicheng/TRexDAD")
+library(TRexDAD)
+```

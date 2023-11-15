@@ -2,17 +2,21 @@ Package: TRexDAD
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("Yunyi", "Cheng", , "yunyi.cheng@outlook.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`
+    person("Yunyi", "Cheng", email = "yunyi.cheng@outlook.com", 
+    role = c("aut", "cre"))
+Maintainer: Yunyi Cheng <yunyi.cheng@outlook.com>
+Description: A pipeline for the design of mutagenizing oligonucleotides required for Tile Region Exchange Mutagenesis (T-Rex), which is a crucial step for deep mutation scanning (DMS), by harnessing data-optimized assembly design (DAD).
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
-    dplyr (>= 1.0.0),
-    ggplot2,
     Biostrings,
-    roxygen2
+    readxl,
+    forstringr
 Depends: 
     R (>= 3.5.0)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
