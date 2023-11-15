@@ -89,10 +89,15 @@ execute_and_plot()
 ## Contributions
 
 The author of the package is Yunyi Cheng. 
+
 The author wrote the *execute_and_plot* function, which performs an optimization process to determine the optimal tile positions in a gene sequence and plots the progression of the score over iterations. 
-Other user-accessible functions are also developed by the author. Most of them serve as helper functions for the *execute_and_plot* function
+
+Other user-accessible functions are also developed by the author. Most of them serve as helper functions for the *execute_and_plot* function.
+
 `Biostrings` R package is used for calculating reverse complement of overhangs in the *get_overhangs* function.
+
 `readxl` R package is used for reading excel file `overhang_fidelity.xlsx` containing tested overhangs's reactivity against each other. `overhang_fidelity.xlsx` is from the study by New England Biolabs.
+
 `forstringr` R package is used for manipulating splitted target gene (a list of codons) in the *get_overhangs* function.
 
 The `stats` R package is used for optimizing gene tile length and number of tiles. It is used in  *calculate_optimal_tiles* function and *execute_and_plot* function. 
@@ -102,7 +107,19 @@ The `stats` R package is used for optimizing gene tile length and number of tile
 
 - Vladimir Potapov, Jennifer L. Ong, Rebecca B. Kucera, Bradley W. Langhorst, Katharina Bilotti, John M. Pryor, Eric J. Cantor, Barry Canton, Thomas F. Knight, Thomas C. Jr. Evans, and Gregory J. S. Lohman. Comprehensive Profiling of Four Base Overhang Ligation Fidelity by T4 DNA Ligase and Application to DNA Assembly. ACS Synthetic Biology, 7(11):2665–2674, 2018.
 
-- 
+- Pagès H, Aboyoun P, Gentleman R, DebRoy S (2023). _Biostrings: Efficient manipulation of
+  biological strings_. doi:10.18129/B9.bioc.Biostrings
+  <https://doi.org/10.18129/B9.bioc.Biostrings>, R package version 2.68.1,
+  <https://bioconductor.org/packages/Biostrings>.
+  
+- Wickham H, Bryan J (2023). _readxl: Read Excel Files_. R package version 1.4.3,
+  <https://CRAN.R-project.org/package=readxl>.
+  
+- Ogundepo E (2023). _forstringr: String Manipulation Package for Those Familiar with 'Microsoft
+  Excel'_. R package version 1.0.0, <https://CRAN.R-project.org/package=forstringr>.
+  
+- R Core Team (2023). _R: A Language and Environment for Statistical Computing_. R Foundation for
+  Statistical Computing, Vienna, Austria. <https://www.R-project.org/>.
 
 ## Acknowledgements
 

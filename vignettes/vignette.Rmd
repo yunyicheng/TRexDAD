@@ -63,6 +63,6 @@ The main objective of the package is to find optimal assembly design in mutageni
 
 To initiate workflow (with visualization of scores), run:
 ```{r}
-execute_and_plot()
+# execute_and_plot()
 ```
 
