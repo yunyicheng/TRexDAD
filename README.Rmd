@@ -37,6 +37,7 @@ Designing oligonucleotides is a significant part of Tile Region Exchange mutagen
 To install the latest version of the package:
 
 ``` {r}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 install.packages("devtools")
 library("devtools")
 devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
@@ -129,10 +130,89 @@ This package was developed as part of an assessment for 2023 BCB410H: Applied Bi
 
 
 ## Package Structure
-```{r}
-install(DependenciesGraph)
-library(DependenciesGraph)
-library(TRexDAD)
-deps <- funDependencies("package:TRexDAD", "generate_split_coded_comments")
-plot(deps)
-```
+
+.
+|____man
+| |____execute_and_plot.Rd
+| |____obtain_score.Rd
+| |____get_all_overhangs.Rd
+| |____pick_position.Rd
+| |____oligo_cost.Rd
+| |____optimize_position.Rd
+| |____calculate_optimal_tiles.Rd
+| |____calculate_scores.Rd
+| |____figures
+| | |____README-unnamed-chunk-4-1.png
+| |____get_overhangs.Rd
+| |____split_into_codons.Rd
+|____.Rbuildignore
+|____vignettes
+| |____vignette.R
+| |____vignette.html
+| |____.gitignore
+| |____vignette.Rmd
+|____.DS_Store
+|____LICENSE
+|____tests
+| |____.DS_Store
+| |____testthat
+| | |____test-processdata.R
+| |____testthat.R
+|____R
+| |____execution_plot.R
+| |____optimize_position.R
+| |____calculate_scores.R
+| |____process_data.R
+|____NAMESPACE
+|____README.md
+|____DESCRIPTION
+|____.gitignore
+|____TRexDAD.Rproj
+|____.git
+| |____config
+| |____objects
+| | |____pack
+| | | |____pack-b02e77c7fc3175ae7a0d927428f92b5241fed994.idx
+| | | |____pack-b02e77c7fc3175ae7a0d927428f92b5241fed994.pack
+| | |____info
+| |____HEAD
+| |____info
+| | |____exclude
+| |____logs
+| | |____HEAD
+| | |____refs
+| | | |____heads
+| | | | |____main
+| | | |____remotes
+| | | | |____origin
+| | | | | |____HEAD
+| |____description
+| |____hooks
+| | |____commit-msg.sample
+| | |____pre-rebase.sample
+| | |____pre-commit.sample
+| | |____applypatch-msg.sample
+| | |____fsmonitor-watchman.sample
+| | |____pre-receive.sample
+| | |____prepare-commit-msg.sample
+| | |____post-update.sample
+| | |____pre-merge-commit.sample
+| | |____pre-applypatch.sample
+| | |____pre-push.sample
+| | |____update.sample
+| | |____push-to-checkout.sample
+| |____refs
+| | |____heads
+| | | |____main
+| | |____tags
+| | |____remotes
+| | | |____origin
+| | | | |____HEAD
+| |____index
+| |____packed-refs
+|____inst
+| |____.DS_Store
+| |____extdata
+| | |____overhang_fidelity.xlsx
+|____README.Rmd
+|____.Rproj.user

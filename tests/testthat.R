@@ -1,4 +1,4 @@
 library(testthat)
-library(yourpackagename)
+library(TRexDAD)
 
 test_check("TRexDAD")
