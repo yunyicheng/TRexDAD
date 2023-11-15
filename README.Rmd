@@ -86,8 +86,6 @@ To initiate workflow (with visualization of scores), run:
 ```{r}
 execute_and_plot()
 ```
-It would return a graph like:
-![Alt text](man/figures/README-unnamed-chunk-4-1.png?raw=true "Title")
 
 ## Contributions
 

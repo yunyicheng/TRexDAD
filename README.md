@@ -52,11 +52,35 @@ To install the latest version of the package:
 ``` r
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 install.packages("devtools")
-#> Error in install.packages : Updating loaded packages
+#> 
+#> The downloaded binary packages are in
+#>  /var/folders/j2/0nyw78hx65ld4h4zpmyv3r_40000gn/T//RtmpLOm6qv/downloaded_packages
 library("devtools")
+#> Loading required package: usethis
 devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
-#> Skipping install of 'TRexDAD' from a github remote, the SHA1 (4e5b1de4) has not changed since last install.
-#>   Use `force = TRUE` to force installation
+#> Downloading GitHub repo yunyicheng/TRexDAD@HEAD
+#> These packages have more recent versions available.
+#> It is recommended to update all of them.
+#> Which would you like to update?
+#> 
+#> 1: All                               
+#> 2: CRAN packages only                
+#> 3: None                              
+#> 4: rlang     (1.1.1  -> 1.1.2) [CRAN]
+#> 5: lifecycle (1.0.3  -> 1.0.4) [CRAN]
+#> 6: stringi   (1.7.12 -> 1.8.1) [CRAN]
+#> 
+#> ── R CMD build ──────────────────────────────────────────────────────────────────────────────────────────────
+#>      checking for file ‘/private/var/folders/j2/0nyw78hx65ld4h4zpmyv3r_40000gn/T/RtmpLOm6qv/remotesad567db383af/yunyicheng-TRexDAD-5afd3b1/DESCRIPTION’ ...  ✔  checking for file ‘/private/var/folders/j2/0nyw78hx65ld4h4zpmyv3r_40000gn/T/RtmpLOm6qv/remotesad567db383af/yunyicheng-TRexDAD-5afd3b1/DESCRIPTION’
+#>   ─  preparing ‘TRexDAD’:
+#>      checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
+#>   ─  installing the package to build vignettes
+#>      creating vignettes ...  ✔  creating vignettes (6.5s)
+#>   ─  checking for LF line-endings in source and make files and shell scripts
+#>   ─  checking for empty or unneeded directories
+#>   ─  building ‘TRexDAD_0.0.0.9000.tar.gz’
+#>      
+#> 
 library("TRexDAD")
 ```
 
@@ -142,101 +166,99 @@ execute_and_plot()
 #>  [1]   3  26  49  72  95 118 141 164 187 210 233 256 279 302 325 348 371 382
 #> [1] "Initial positions = 3, 26, 49, 72, 95, 118, 141, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
 #> [1] "Initial score = 632800"
-#> [1] "Optimized target = 120"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
-#> [1] "#iteration = 1 , current score = 648300"
-#> [1] "Optimized target = 165"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
-#> [1] "#iteration = 2 , current score = 660750"
-#> [1] "Optimized target = 120"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
-#> [1] "#iteration = 3 , current score = 660750"
-#> [1] "Optimized target = 279"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
-#> [1] "#iteration = 4 , current score = 660750"
-#> [1] "Optimized target = 364"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 233, 256, 279, 302, 325, 348, 364, 382"
-#> [1] "#iteration = 5 , current score = 681100"
 #> [1] "Optimized target = 49"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 233, 256, 279, 302, 325, 348, 364, 382"
-#> [1] "#iteration = 6 , current score = 681100"
-#> [1] "Optimized target = 302"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 233, 256, 279, 302, 325, 348, 364, 382"
-#> [1] "#iteration = 7 , current score = 681100"
-#> [1] "Optimized target = 235"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 235, 256, 279, 302, 325, 348, 364, 382"
-#> [1] "#iteration = 8 , current score = 690850"
-#> [1] "Optimized target = 325"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 235, 256, 279, 302, 325, 348, 364, 382"
-#> [1] "#iteration = 9 , current score = 690850"
-#> [1] "Optimized target = 210"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 235, 256, 279, 302, 325, 348, 364, 382"
-#> [1] "#iteration = 10 , current score = 690850"
-#> [1] "Optimized target = 302"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 235, 256, 279, 302, 325, 348, 364, 382"
-#> [1] "#iteration = 11 , current score = 690850"
-#> [1] "Optimized target = 346"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 165, 187, 210, 235, 256, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 12 , current score = 692550"
-#> [1] "Optimized target = 169"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 120, 141, 169, 187, 210, 235, 256, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 13 , current score = 699600"
-#> [1] "Optimized target = 122"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 122, 141, 169, 187, 210, 235, 256, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 14 , current score = 710200"
-#> [1] "Optimized target = 302"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 122, 141, 169, 187, 210, 235, 256, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 15 , current score = 710200"
-#> [1] "Optimized target = 257"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 122, 141, 169, 187, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 16 , current score = 719100"
-#> [1] "Optimized target = 302"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 122, 141, 169, 187, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 17 , current score = 719100"
-#> [1] "Optimized target = 346"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 122, 141, 169, 187, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 18 , current score = 719100"
+#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 141, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 1 , current score = 632800"
+#> [1] "Optimized target = 140"
+#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 2 , current score = 753650"
 #> [1] "Optimized target = 25"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 141, 169, 187, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 19 , current score = 804100"
-#> [1] "Optimized target = 346"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 141, 169, 187, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 20 , current score = 804100"
-#> [1] "Optimized target = 148"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 187, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 21 , current score = 936450"
-#> [1] "Optimized target = 235"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 187, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 22 , current score = 936450"
-#> [1] "Optimized target = 193"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 193, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 23 , current score = 951300"
-#> [1] "Optimized target = 257"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 193, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 24 , current score = 951300"
-#> [1] "Optimized target = 302"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 193, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 25 , current score = 951300"
-#> [1] "Optimized target = 257"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 193, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 26 , current score = 951300"
-#> [1] "Optimized target = 364"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 193, 210, 235, 257, 279, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 27 , current score = 951300"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 3 , current score = 839450"
+#> [1] "Optimized target = 140"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 4 , current score = 839450"
+#> [1] "Optimized target = 140"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 5 , current score = 839450"
+#> [1] "Optimized target = 210"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 6 , current score = 839450"
+#> [1] "Optimized target = 140"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 7 , current score = 839450"
 #> [1] "Optimized target = 277"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 193, 210, 235, 257, 277, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 28 , current score = 964050"
-#> [1] "Optimized target = 346"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 193, 210, 235, 257, 277, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 29 , current score = 964050"
-#> [1] "Optimized target = 190"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 122, 148, 169, 190, 210, 235, 257, 277, 302, 325, 346, 364, 382"
-#> [1] "#iteration = 30 , current score = 964300"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 277, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 8 , current score = 861800"
+#> [1] "Optimized target = 233"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 277, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 9 , current score = 861800"
+#> [1] "Optimized target = 118"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 277, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 10 , current score = 861800"
+#> [1] "Optimized target = 49"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 277, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 11 , current score = 861800"
+#> [1] "Optimized target = 140"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 187, 210, 233, 256, 277, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 12 , current score = 861800"
+#> [1] "Optimized target = 185"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 185, 210, 233, 256, 277, 302, 325, 348, 371, 382"
+#> [1] "#iteration = 13 , current score = 874100"
+#> [1] "Optimized target = 324"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 140, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 14 , current score = 879700"
+#> [1] "Optimized target = 143"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 15 , current score = 880750"
+#> [1] "Optimized target = 210"
+#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 16 , current score = 880750"
+#> [1] "Optimized target = 94"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 118, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 17 , current score = 881600"
+#> [1] "Optimized target = 277"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 118, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 18 , current score = 881600"
+#> [1] "Optimized target = 233"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 118, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 19 , current score = 881600"
+#> [1] "Optimized target = 94"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 118, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 20 , current score = 881600"
+#> [1] "Optimized target = 121"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 21 , current score = 882750"
+#> [1] "Optimized target = 277"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 22 , current score = 882750"
+#> [1] "Optimized target = 324"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 23 , current score = 882750"
+#> [1] "Optimized target = 324"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 24 , current score = 882750"
+#> [1] "Optimized target = 185"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 164, 185, 210, 233, 256, 277, 302, 324, 348, 371, 382"
+#> [1] "#iteration = 25 , current score = 882750"
+#> [1] "Optimized target = 301"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 164, 185, 210, 233, 256, 277, 301, 324, 348, 371, 382"
+#> [1] "#iteration = 26 , current score = 886650"
+#> [1] "Optimized target = 168"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 168, 185, 210, 233, 256, 277, 301, 324, 348, 371, 382"
+#> [1] "#iteration = 27 , current score = 889900"
+#> [1] "Optimized target = 168"
+#> [1] "Modified pos = 3, 25, 49, 72, 94, 121, 143, 168, 185, 210, 233, 256, 277, 301, 324, 348, 371, 382"
+#> [1] "#iteration = 28 , current score = 889900"
+#> [1] "Optimized target = 96"
+#> [1] "Modified pos = 3, 25, 49, 72, 96, 121, 143, 168, 185, 210, 233, 256, 277, 301, 324, 348, 371, 382"
+#> [1] "#iteration = 29 , current score = 894500"
+#> [1] "Optimized target = 364"
+#> [1] "Modified pos = 3, 25, 49, 72, 96, 121, 143, 168, 185, 210, 233, 256, 277, 301, 324, 348, 364, 382"
+#> [1] "#iteration = 30 , current score = 915650"
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" /> It
-would return a graph like: ![Alt
-text](man/figures/README-unnamed-chunk-4-1.png?raw=true "Title")
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
 ## Contributions
 
