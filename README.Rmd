@@ -52,9 +52,10 @@ library("TRexDAD")
 
 ## Package Overview
 
-To list all user-accessible functions, run:
 ```{r}
 ls("package:TRexDAD")
+data(package = "TRexDAD") 
+browseVignettes("TRexDAD")
 ```
 
 `TRexDAD` contains 10 functions.
@@ -99,6 +100,8 @@ The `stats` R package is used for optimizing gene tile length and number of tile
 
 ## References
 
+- Pryor, J. M., Potapov, V., Kucera, R. B., Bilotti, K., Cantor, E. J., & S. Lohman, G. J. (2020). Enabling one-pot Golden Gate assemblies of unprecedented complexity using data-optimized assembly design. PLOS ONE, 15(9), e0238592. https://doi.org/10.1371/journal.pone.0238592
+
 - Vladimir Potapov, Jennifer L. Ong, Rebecca B. Kucera, Bradley W. Langhorst, Katharina Bilotti, John M. Pryor, Eric J. Cantor, Barry Canton, Thomas F. Knight, Thomas C. Jr. Evans, and Gregory J. S. Lohman. Comprehensive Profiling of Four Base Overhang Ligation Fidelity by T4 DNA Ligase and Application to DNA Assembly. ACS Synthetic Biology, 7(11):2665–2674, 2018.
 
 - Pagès H, Aboyoun P, Gentleman R, DebRoy S (2023). _Biostrings: Efficient manipulation of
@@ -125,7 +128,7 @@ This package was developed as part of an assessment for 2023 BCB410H: Applied Bi
 The main objective of the package is to find optimal assembly design in mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a 5′-3′ flap exo/endonuclease, which is significant for DNA replication.
 
 To initiate workflow (with visualization of scores), run:
-```{r}
+```{r} 
 execute_and_plot()
 ```
 
