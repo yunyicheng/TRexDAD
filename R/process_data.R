@@ -1,13 +1,3 @@
-# tmp <- function(x, create) {
-#     if(!create){
-#         x
-#     }else{
-#         "new"
-#     }
-# }
-# 
-# 
-
 #' Split Gene Sequence into Codons
 #'
 #' This function takes a gene sequence (as a string) and splits it into codons. 
