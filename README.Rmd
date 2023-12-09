@@ -79,13 +79,6 @@ the number of tiles and the number of codons.
 
 10. ***optimize_position*** optimizes a single position within a list of positions. It adjusts the specified position to maximize the overall score (obtained via `calculate_scores`). The function supports different optimization modes, including greedy and Markov Chain Monte Carlo (MCMC) approaches.
 
-## Workflow Usage
-The main objective of the package is to find optimal assembly design in mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a 5′-3′ flap exo/endonuclease, which is significant for DNA replication.
-
-To initiate workflow (with visualization of scores), run:
-```{r}
-execute_and_plot()
-```
 
 ## Contributions
 
@@ -128,6 +121,13 @@ This package was developed as part of an assessment for 2023 BCB410H: Applied Bi
 
 `TRexDAD` welcomes issues, enhancement requests, and other contributions. To submit an issue, use the [GitHub issues](https://github.com/yunyicheng/TRexDAD/issues). Many thanks to those who provided feedback to improve this package.
 
+## Workflow Usage
+The main objective of the package is to find optimal assembly design in mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a 5′-3′ flap exo/endonuclease, which is significant for DNA replication.
+
+To initiate workflow (with visualization of scores), run:
+```{r}
+execute_and_plot()
+```
 
 ## Package Structure
 The package tree structure is provided below:
