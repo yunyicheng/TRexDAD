@@ -18,13 +18,13 @@
 #'      Enabling one-pot Golden Gate assemblies of unprecedented complexity using data-optimized assembly design. 
 #'      PLOS ONE 15(9): e0238592, 2020.
 #' @import readxl
+#' @import TRexDAD
 #' 
 #' @export
 execute_and_plot <- function(iteration_max=30, scan_rate=7) {
     
     # Read overhang fidelity chart
-    overhang_fidelity <<- read_excel("inst/extdata/overhang_fidelity.xlsx",
-                                    sheet = "S1 Table. BsaI-HFv2")
+    overhang_fidelity <<- read.csv("inst/extdata/overhang_fidelity.csv")
     
     target_gene <<- "AATATGGGTATTAAAGGTTTGAATGCAATTATATCGGAACATGTTCCCTCTGCTATCAGGAAAAGCGATATCAAGAGCTTTTTTGGCAGAAAGGTTGCCATCGATGCCTCTATGTCTCTATATCAGTTTTTAATTGCTGTAAGACAGCAAGACGGTGGGCAGTTGACCAATGAAGCCGGTGAAACAACGTCACACTTGATGGGTATGTTTTATAGGACACTGAGAATGATTGATAACGGTATCAAGCCTTGTTATGTCTTCGACGGCAAACCTCCAGATTTGAAATCTCATGAGTTGACAAAGCGGTCTTCAAGAAGGGTGGAAACAGAAAAAAAACTGGCAGAGGCAACAACAGAATTGGAAAAGATGAAGCAAGAAAGAAGATTGGTGAAGGTTTCAAAAGAGCATAATGAAGAAGCCCAAAAATTACTAGGACTAATGGGAATCCCATATATAATAGCGCCAACGGAAGCTGAGGCTCAATGTGCTGAGTTGGCAAAGAAGGGAAAGGTGTATGCCGCAGCAAGTGAAGATATGGACACACTCTGTTATAGAACACCCTTCTTGTTGAGACATTTGACTTTTTCAGAGGCCAAGAAGGAACCGATTCACGAAATAGATACTGAATTAGTTTTGAGAGGACTCGACTTGACAATAGAGCAGTTTGTTGATCTTTGCATAATGCTTGGTTGTGACTACTGTGAAAGCATCAGAGGTGTTGGTCCAGTGACAGCCTTAAAATTGATAAAAACGCATGGATCCATCGAAAAAATCGTGGAGTTTATTGAATCTGGGGAGTCAAACAACACTAAATGGAAAATCCCAGAAGACTGGCCTTACAAACAAGCAAGAATGCTGTTTCTTGACCCTGAAGTTATAGATGGTAACGAAATAAACTTGAAATGGTCGCCACCAAAGGAGAAGGAACTTATCGAGTATTTATGTGATGATAAGAAATTCAGTGAAGAAAGAGTTAAATCTGGTATATCAAGATTGAAAAAAGGCTTGAAATCTGGCATTCAGGGTAGGTTAGATGGGTTCTTCCAAGTGGTGCCTAAGACAAAGGAACAGCTGGCTGCTGCGGCGAAAAGAGCACAAGAAAATAAAAAATTGAACAAAAATAAGAATAAAGTCACAAAGGGAAGAAGATGAGGG"
     target_gene <<- split_into_codons(target_gene)
@@ -44,10 +44,6 @@ execute_and_plot <- function(iteration_max=30, scan_rate=7) {
     num_tiles_global <<- round(optimization_result$minimum)
     length_tiles_global <<- round(num_codons / num_tiles_global)
     
-    # utils::globalVariables(c(overhang_fidelity, target_gene, num_tiles_global, 
-    #                          length_tiles_global))
-    # utils::suppressForeignCheck(c(overhang_fidelity, target_gene, num_tiles_global, 
-    #                               length_tiles_global))
     # Print results
     cat("Optimal number of tiles =", num_tiles_global, "\n")
     cat("Optimal length of tiles =", length_tiles_global, "\n")
@@ -66,8 +62,6 @@ execute_and_plot <- function(iteration_max=30, scan_rate=7) {
     num_iter <- 0
     x_data <- numeric()
     y_data <- numeric()
-    # iteration_max <- 30
-    # scan_rate <- 7
     
     while (num_iter < iteration_max) {
         # Pick a position to improve
