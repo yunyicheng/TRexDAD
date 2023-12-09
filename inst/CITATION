@@ -1,0 +1,14 @@
+citHeader("To cite TRexDAD in publications use:")
+
+citEntry(
+  entry    = "Unpublished",
+  title    = "TRexDAD: Data-driven Pipeline for Tile Region Exchange Assembly Design",
+  author   = "Kevin Zhu",
+  year     = 2023,
+  note     = "Unpublished",
+  textVersion =
+  paste("Cheng, Y. (2023) TRexDAD: Data-driven Pipeline for Tile Region Exchange Assembly Design.
+        Unpublished. URL https://github.com/yunyicheng/TRexDAD")
+)
+
+citFooter("This R package is free software and comes with ABSOLUTELY NO WARRANTY.")
