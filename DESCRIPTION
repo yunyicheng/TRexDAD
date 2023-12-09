@@ -1,5 +1,5 @@
 Package: TRexDAD
-Title: What the Package Does (One Line, Title Case)
+Title: Data-driven Pipeline for Tile Region Exchange Assembly Design
 Version: 0.0.0.9000
 Authors@R: 
     person("Yunyi", "Cheng", email = "yunyi.cheng@outlook.com", 

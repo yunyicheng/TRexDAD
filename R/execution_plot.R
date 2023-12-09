@@ -1,9 +1,3 @@
-source("R/calculate_scores.R")
-source("R/optimize_position.R")
-source("R/process_data.R")
-library(readxl)
-# utils::globalVariables(c(overhang_fidelity, target_gene, num_tiles_global, 
-#                          length_tiles_global))
 #' Execute the Optimization Process and Plot Results
 #'
 #' This function performs an optimization process to determine the optimal tile
@@ -107,4 +101,4 @@ execute_and_plot <- function(iteration_max=30, scan_rate=7) {
     plot(x_data, y_data, type = "b", col = "blue", xlab = "Iteration", ylab = "Score", main = "Score Optimization Over Iterations")
     
 }
-#execute_and_plot()
+execute_and_plot()
