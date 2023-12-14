@@ -3,7 +3,7 @@ citHeader("To cite TRexDAD in publications use:")
 citEntry(
   entry    = "Unpublished",
   title    = "TRexDAD: Data-driven Pipeline for Tile Region Exchange Assembly Design",
-  author   = "Kevin Zhu",
+  author   = "Yunyi Cheng",
   year     = 2023,
   note     = "Unpublished",
   textVersion =

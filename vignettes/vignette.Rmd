@@ -1,34 +1,46 @@
 ---
-title: "Tutorial for TRexDAD Package"
+title: "Introduction to TRexDAD"
 author: "Yunyi Cheng"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+date: "`r format(Sys.time(), '%d %b %Y')`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: false
 vignette: >
-  %\VignetteIndexEntry{Tutorial for TRexDAD Package}
+  %\VignetteIndexEntry{Introduction to TRexDAD}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
-# Introduction
-The TRexDAD package offers tools for optimizing gene editing designs. This vignette demonstrates the use of key functions in the package.
 
-# Installation
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  message = FALSE,
-  warning = FALSE,
-  comment = "#>"
-)
+```{r setup1, include=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = "center", 
+               out.width = "90%",
+               fig.width = 6, fig.height = 5.5,
+               dev.args=list(pointsize=10),
+               par = TRUE, # needed for setting hook 
+               collapse = TRUE, # collapse input & ouput code in chunks
+               warning = FALSE)
+knit_hooks$set(par = function(before, options, envir)
+  { if(before && options$fig.show != "none") 
+       par(family = "sans", mar=c(4.1,4.1,1.1,1.1), mgp=c(3,1,0), tcl=-0.5)
+})
+set.seed(1) # for exact reproducibility
 ```
 
 ```{r setup}
 require("devtools")
+
 # Install from GitHub
-devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
+devtools::install_github("yunyicheng/TRexDAD")
+
 # Load the package
-library(TRexDAD)
+library(TMscoreAlign)
 ```
+
+# Introduction
+TRexDAD is a pipeline for the design of mutagenizing oligonucleotides required for Tile Region Exchange Mutagenesis (T-Rex), which is a crucial step for deep mutation scanning (DMS), by harnessing data-optimized assembly design (DAD). In DMS, all variants of the target gene will 
+
 # Package Overview
 
 To list all user-accessible functions, run:
@@ -63,6 +75,6 @@ The main objective of the package is to find optimal assembly design in mutageni
 
 To initiate workflow (with visualization of scores), run:
 ```{r}
-# execute_and_plot()
+execute_and_plot()
 ```
 

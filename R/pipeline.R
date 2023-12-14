@@ -6,6 +6,11 @@ OVERHANG_FIDELITY <- read.csv("inst/extdata/overhang_fidelity.csv")
 # Rad-27 gene for example usage
 RAD_27 <- "AATATGGGTATTAAAGGTTTGAATGCAATTATATCGGAACATGTTCCCTCTGCTATCAGGAAAAGCGATATCAAGAGCTTTTTTGGCAGAAAGGTTGCCATCGATGCCTCTATGTCTCTATATCAGTTTTTAATTGCTGTAAGACAGCAAGACGGTGGGCAGTTGACCAATGAAGCCGGTGAAACAACGTCACACTTGATGGGTATGTTTTATAGGACACTGAGAATGATTGATAACGGTATCAAGCCTTGTTATGTCTTCGACGGCAAACCTCCAGATTTGAAATCTCATGAGTTGACAAAGCGGTCTTCAAGAAGGGTGGAAACAGAAAAAAAACTGGCAGAGGCAACAACAGAATTGGAAAAGATGAAGCAAGAAAGAAGATTGGTGAAGGTTTCAAAAGAGCATAATGAAGAAGCCCAAAAATTACTAGGACTAATGGGAATCCCATATATAATAGCGCCAACGGAAGCTGAGGCTCAATGTGCTGAGTTGGCAAAGAAGGGAAAGGTGTATGCCGCAGCAAGTGAAGATATGGACACACTCTGTTATAGAACACCCTTCTTGTTGAGACATTTGACTTTTTCAGAGGCCAAGAAGGAACCGATTCACGAAATAGATACTGAATTAGTTTTGAGAGGACTCGACTTGACAATAGAGCAGTTTGTTGATCTTTGCATAATGCTTGGTTGTGACTACTGTGAAAGCATCAGAGGTGTTGGTCCAGTGACAGCCTTAAAATTGATAAAAACGCATGGATCCATCGAAAAAATCGTGGAGTTTATTGAATCTGGGGAGTCAAACAACACTAAATGGAAAATCCCAGAAGACTGGCCTTACAAACAAGCAAGAATGCTGTTTCTTGACCCTGAAGTTATAGATGGTAACGAAATAAACTTGAAATGGTCGCCACCAAAGGAGAAGGAACTTATCGAGTATTTATGTGATGATAAGAAATTCAGTGAAGAAAGAGTTAAATCTGGTATATCAAGATTGAAAAAAGGCTTGAAATCTGGCATTCAGGGTAGGTTAGATGGGTTCTTCCAAGTGGTGCCTAAGACAAAGGAACAGCTGGCTGCTGCGGCGAAAAGAGCACAAGAAAATAAAAAATTGAACAAAAATAAGAATAAAGTCACAAAGGGAAGAAGATGAGGG"
 
+# install Biostrings
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("Biostrings")
+
 #' Split Gene Sequence into Codons
 #'
 #' This function takes a gene sequence (as a string) and splits it into codons. 
@@ -123,7 +128,7 @@ calculate_optimal_tiles <- function(num_codons) {
                 optimal_cost = optimal_cost))
 }
 
-calculate_optimal_tiles(100)
+
 # --- SECTION: Calculate Scores -----------------
 
 
@@ -143,8 +148,8 @@ calculate_optimal_tiles(100)
 #' @return A list containing two elements: `head` and `tail`, representing the 
 #'         overhang sequences at the specified positions.
 #'
-#' @import Biostrings
 #' @import forstringr
+#' @importFrom Biostrings DNAString
 #' @export
 #' @examples
 #' # Overhangs for sample gene_codons at position(start, end)
@@ -209,7 +214,7 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
 #' @return The calculated score for the specified tile, which takes into account
 #'         the palindromicity, length variation, and on-target reactivity.
 #'
-#' @import Biostrings
+#' @importFrom Biostrings reverseComplement
 #' @examples
 #' # Assuming predefined variables and setup:
 #' # start = 1, end = 3, overhang_fidelity (dataframe), tile_length_global (value)
@@ -261,7 +266,8 @@ calculate_local_score <- function(gene_codons, tile_length, start, end) {
 #' @return The global score, which is a composite measure considering the off-target 
 #'         reactions, repetitions in overhangs, and the sum of local scores for each position.
 #'
-#' @import Biostrings, utils
+#' @importFrom Biostrings reverseComplement
+#' @import utils
 #' @export
 calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
     overhang_fidelity_df <- as.data.frame(OVERHANG_FIDELITY)
@@ -411,7 +417,7 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 }
 
 
-# --- SECTION: Execution and Plot -----------------
+# --- SECTION: Execute and Plot -----------------
 
 
 #' Execute the Optimization Process and Plot Results
@@ -496,4 +502,4 @@ execute_and_plot <- function(target_gene=RAD_27, max_iter=30, scan_rate=7) {
     plot(x_data, y_data, type = "b", col = "blue", xlab = "Iteration", ylab = "Score", main = "Score Optimization Over Iterations")
     
 }
-execute_and_plot()
+# execute_and_plot()

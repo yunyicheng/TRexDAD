@@ -30,7 +30,9 @@ A pipeline for the design of mutagenizing oligonucleotides required for Tile Reg
 
 ## Description
 
-Designing oligonucleotides is a significant part of Tile Region Exchange mutagenesis (T-Rex). However, derive the assembly design by hand is often error-prone and time-consuming since the fidelity of resulting oligonucleotides does not merely depend on mere rules. Therefore, a data-driven solution is required for designing oligonucleotides with high correct assembly rate. Although there are web tools currently available for this procedure, few of them utilized Data-optimized Assembly Design.`TRexDAD` is a streamline tool that facilitates oligonucleotide design for Tile Region Exchange Mutagenesis by harnessing Data-optimized Assembly Design (DAD) techniques, along with visualization of the results. The package is targeted for researchers who perform Tile Region Exchange Mutagenesis for some genes of interest and need an efficient and reliable streamline to produce mutagenizing oligonucleotides. The scope of the R package is to improve the work flow in Tile Region Exchange Mutagenesis, facilitating open-source researches for interested bioinformatitians and computational biologists. The `TRexDAD` package was developed using `R version 4.3.1 (2023-06-16)`, `Platform: aarch64-apple-darwin20 (64-bit)` and `Running under: macOS Sonoma 14.1.1`.
+Designing oligonucleotides is a significant part of Tile Region Exchange mutagenesis (T-Rex). It is a DNA assembly technique based on cassette mutagenesis, which utilizes a short, double-stranded oligonucleotide sequence (gene cassette) to replace a fragment of target DNA. It uses complementary restriction enzyme digest ends on the target DNA and gene cassette to achieve specificity. Here is a general overview of Tile Region Exchange and cassette mutagenesis.
+![TRex Process Overview](inst/extdata/TRex_overview.png)
+However, derive the assembly design by hand is often error-prone and time-consuming since the fidelity of resulting oligonucleotides does not merely depend on mere rules. Therefore, a data-driven solution is required for designing oligonucleotides with high correct assembly rate []. Although there are web tools currently available for this procedure, few of them utilized Data-optimized Assembly Design.`TRexDAD` is a streamline tool that facilitates oligonucleotide design for Tile Region Exchange Mutagenesis by harnessing Data-optimized Assembly Design (DAD) techniques, along with visualization of optimization process. The package is targeted for researchers who perform Tile Region Exchange Mutagenesis for some genes of interest and need an efficient and reliable streamline to produce mutagenizing oligonucleotides. The scope of the R package is to improve the work flow in Tile Region Exchange Mutagenesis, facilitating open-source researches for interested bioinformatitians and computational biologists. The `TRexDAD` package was developed using `R version 4.3.1 (2023-06-16)`, `Platform: aarch64-apple-darwin20 (64-bit)` and `Running under: macOS Sonoma 14.1.1`.
 
 ## Installation
 
@@ -58,7 +60,9 @@ data(package = "TRexDAD")
 browseVignettes("TRexDAD")
 ```
 
-`TRexDAD` contains 10 functions.
+`TRexDAD` contains 10 functions. Since they are all parts of an integrated pipeline, they are go to one R script, `pipeline.R`. Here are the workflow illustration and detailed explaination of them.
+
+![Pipeline Workflow](inst/extdata/pipeline_workflow.png)
 
 1.  ***execute_and_plot*** is the work flow function which wraps up most of the other functions. It performs an optimization process to determine the optimal tile positions in a gene sequence and plots the progression of the score over iterations. It provides two customization parameters: `iteration_max` and `scan_rate`. If not other specified, these parameter will have default values: `iteration_max=30`, `scan_rate=7`.
 
@@ -73,9 +77,10 @@ the number of tiles and the number of codons.
 
 6. ***get_all_overhangs*** computes overhang sequences for a given list of positions in a gene sequence. It iteratively calls the `get_overhangs` function to calculate the head and tail overhangs for each position and accumulates them in a list.
 
-7. ***obtain_score*** calculates a score for a specific tile within a gene sequence. The score is based on palindromicity, length variation from a global standard, and on-target reactivity, using a pre-defined overhang fidelity dataframe.
+7. ***calculate_local_score*** calculates a score for a specific tile within a gene sequence. The score is based on palindromicity, length variation from a global standard, and on-target reactivity, using a pre-defined overhang fidelity dataframe.
 
-8. ***calculate_scores*** calculates a global score for a list of positions in a gene sequence. The score takes into account off-target reactions, repetitions, and the sum of local scores (by calling `obtain_score`). 
+8. ***calculate_global_score*** calculates a global score for a list of positions in a gene sequence. The score takes into account off-target reactions, repetitions, and the sum of local scores (by calling `obtain_score`). 
+
 9. ***pick_position*** selects a position from a list of positions for optimization based on their scores. It uses a weighted sampling approach where the weights are inversely proportional to the scores of the positions.
 
 10. ***optimize_position*** optimizes a single position within a list of positions. It adjusts the specified position to maximize the overall score (obtained via `calculate_scores`). The function supports different optimization modes, including greedy and Markov Chain Monte Carlo (MCMC) approaches.
@@ -100,23 +105,17 @@ The `stats` R package is used for optimizing gene tile length and number of tile
 
 ## References
 
-- Pryor, J. M., Potapov, V., Kucera, R. B., Bilotti, K., Cantor, E. J., & S. Lohman, G. J. (2020). Enabling one-pot Golden Gate assemblies of unprecedented complexity using data-optimized assembly design. PLOS ONE, 15(9), e0238592. https://doi.org/10.1371/journal.pone.0238592
+- Pryor JM, Potapov V, Kucera RB, Bilotti K, Cantor EJ, Lohman GJS (2020). Enabling one-pot Golden Gate assemblies of unprecedented complexity using data-optimized assembly design. *PLOS ONE*, **15**(9), e0238592. [doi:10.1371/journal.pone.0238592](doi:10.1371/journal.pone.0238592)
 
-- Vladimir Potapov, Jennifer L. Ong, Rebecca B. Kucera, Bradley W. Langhorst, Katharina Bilotti, John M. Pryor, Eric J. Cantor, Barry Canton, Thomas F. Knight, Thomas C. Jr. Evans, and Gregory J. S. Lohman. Comprehensive Profiling of Four Base Overhang Ligation Fidelity by T4 DNA Ligase and Application to DNA Assembly. ACS Synthetic Biology, 7(11):2665–2674, 2018.
+- Potapov V, Ong JL, Kucera RB, Langhorst BW, Bilotti K, Pryor JM, Cantor EJ, Canton B, Knight TF, Evans TC Jr, Lohman GJS (2018). Comprehensive profiling of four base overhang ligation fidelity by T4 DNA ligase and application to DNA assembly. *ACS Synthetic Biology*, **7**(11), 2665–2674.
 
-- Pagès H, Aboyoun P, Gentleman R, DebRoy S (2023). _Biostrings: Efficient manipulation of
-  biological strings_. doi:10.18129/B9.bioc.Biostrings
-  <https://doi.org/10.18129/B9.bioc.Biostrings>, R package version 2.68.1,
-  <https://bioconductor.org/packages/Biostrings>.
-  
-- Wickham H, Bryan J (2023). _readxl: Read Excel Files_. R package version 1.4.3,
-  <https://CRAN.R-project.org/package=readxl>.
-  
-- Ogundepo E (2023). _forstringr: String Manipulation Package for Those Familiar with 'Microsoft
-  Excel'_. R package version 1.0.0, <https://CRAN.R-project.org/package=forstringr>.
-  
-- R Core Team (2023). _R: A Language and Environment for Statistical Computing_. R Foundation for
-  Statistical Computing, Vienna, Austria. <https://www.R-project.org/>.
+- Pagès H, Aboyoun P, Gentleman R, DebRoy S (2023). Biostrings: Efficient manipulation of biological strings. Bioconductor. [doi:10.18129/B9.bioc.Biostrings](https://doi.org/10.18129/B9.bioc.Biostrings), R package version 2.68.1, [Biostrings](https://bioconductor.org/packages/Biostrings).
+
+- Wickham H, Bryan J (2023). readxl: Read Excel Files. R package version 1.4.3, [CRAN](https://CRAN.R-project.org/package=readxl).
+
+- Ogundepo E (2023). forstringr: String Manipulation Package for Those Familiar with 'Microsoft Excel'. R package version 1.0.0, [CRAN](https://CRAN.R-project.org/package=forstringr).
+
+- R Core Team (2023). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria. [R Project](https://www.R-project.org/).
 
 ## Acknowledgements
 
