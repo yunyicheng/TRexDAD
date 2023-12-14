@@ -110,7 +110,7 @@ calculate_optimal_tiles <- function(num_codons) {
     costs <- sapply(num_tiles_range, function(x) oligo_cost(x, num_codons))
     optimal_num_tiles <- which.min(costs)
     optimal_cost <- min(costs)
-    optimal_tile_length <- round(num_codons / optimal_tiles)
+    optimal_tile_length <- round(num_codons / optimal_num_tiles)
     
     # Print structured sentence
     cat("For", num_codons, "codons, the optimal number of tiles is", 
@@ -150,7 +150,7 @@ calculate_optimal_tiles(100)
 #' # Overhangs for sample gene_codons at position(start, end)
 #' get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
 #' "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
-get_overhangs <- function(gene_codons, start, end, flag) {
+get_overhangs <- function(gene_codons, start, end, as_dna_strings) {
     # Extract the overhangs
     head <- paste(forstringr::str_right(gene_codons[start - 2], 1), 
                   forstringr::str_left(gene_codons[start - 1], 3), sep = "")
@@ -158,18 +158,18 @@ get_overhangs <- function(gene_codons, start, end, flag) {
                   forstringr::str_left(gene_codons[end + 2], 1), sep = "")
     
     # If flag is true, return as DNAString objects; otherwise, as character strings
-    if (flag == 1) {
+    if (as_dna_strings) {
         head <- Biostrings::DNAString(head)
         tail <- Biostrings::DNAString(tail)
     } else {
         head <- as.character(head)
         tail <- as.character(tail)
     }
-    
+    # print(list(head = head, tail = tail))
     return(list(head = head, tail = tail))
 }
-get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
-                "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
+# get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+#                 "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
 
 
 
@@ -189,13 +189,11 @@ get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA",
 #'
 #' @export
 get_all_overhangs <- function(gene_codons, pos_lst) {
-    all_overhangs <- vector(mode="list", length=length(pos_lst)-1)
-    
+    all_overhangs <- list()
     for (i in 1:(length(pos_lst) - 1)) {
-        overhangs <- get_overhangs(gene_codons=gene_codons, pos_lst[i], pos_lst[i + 1] - 1, TRUE)
+        overhangs <- get_overhangs(gene_codons, pos_lst[i], pos_lst[i + 1] - 1, TRUE)
         all_overhangs <- c(all_overhangs, overhangs$head, overhangs$tail)
     }
-    
     return(all_overhangs)
 }
 
@@ -273,6 +271,7 @@ calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
     
     overhangs <- get_all_overhangs(gene_codons, pos_lst)
     overhangs_chr <- lapply(overhangs, as.character)
+    # print(overhangs_chr)
     complements <- lapply(overhangs, Biostrings::reverseComplement)
     complements_chr <- lapply(complements, as.character)
     
@@ -304,9 +303,9 @@ calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
     
     repetition <- length(overhangs) - length(unique(overhangs))
     local_score <- sum(sapply(seq_along(pos_lst)[-length(pos_lst)], 
-                              function(i) calculate_local_score(gene_codons, 
-                                                       pos_lst[i], 
-                                                       pos_lst[i + 1] - 1)))
+                              function(i) calculate_local_score(
+                                  gene_codons, tile_length, 
+                                  pos_lst[i], pos_lst[i + 1] - 1)))
     global_score <- ((50 * local_score) 
                      - (100 * off_reaction) - (1000 * repetition))
     
@@ -367,7 +366,7 @@ pick_position <- function(gene_codons, tile_length, pos_lst) {
 #' @param curr_pos The current position value that needs optimization.
 #' @param left The left boundary of the scanning range for position optimization.
 #' @param right The right boundary of the scanning range for position optimization.
-#' @param mode The optimization mode: 1 for greedy, 2 for MCMC.
+#' @param use_greedy The optimization mode: TRUE for greedy, FALSE for MCMC.
 #'
 #' @return The optimized position value within the specified range. If the function
 #'         does not find a better position, it returns the original position value.
@@ -380,15 +379,15 @@ pick_position <- function(gene_codons, tile_length, pos_lst) {
 #'
 #' @export
 optimize_position <- function(gene_codons, tile_length, pos_lst, 
-                              curr_pos, left, right, mode) {
+                              curr_pos, left, right, use_greedy) {
     score_weights <- numeric()
     indexes <- numeric()
     original_score <- calculate_global_score(gene_codons, tile_length, pos_lst)
     
     for (n in left:right) {
-        curr_pos_ind <- match(curr_pos, copy_pos_lst)
-        copy_pos_lst[curr_pos_ind] <- n
-        s <- calculate_global_scores(gene_codons, tile_length, pos_lst)
+        curr_pos_ind <- match(curr_pos, pos_lst)
+        pos_lst[curr_pos_ind] <- n
+        s <- calculate_global_score(gene_codons, tile_length, pos_lst)
         
         if (s >= original_score) {
             indexes <- c(indexes, n)
@@ -401,10 +400,10 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
     score_weights <- score_weights - offset + 1
     
     # GREEDY
-    if (mode == 1) {
+    if (use_greedy) {
         result_index <- indexes[which.max(score_weights)]
-        # MCMC
-    } else if (mode == 2) {
+    # MCMC
+    } else {
         result_index <- sample(indexes, size = 1, prob = score_weights)
     }
     
@@ -422,7 +421,7 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #' It reads the overhang fidelity data, computes the optimal number of tiles, and iteratively
 #' improves the positions, plotting the change in score with respect to number of iterations at the end.
 #'
-#' @param iteration_max The maximum number of iterations for the optimization process (default: 30).
+#' @param max_iter The maximum number of iterations for the optimization process (default: 30).
 #' @param scan_rate The range within which to scan for optimizing tile positions (default: 7).
 #'
 #' @return This function does not return a value; it generates a plot showing the score
@@ -437,7 +436,7 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #' @import stats
 #' 
 #' @export
-execute_and_plot <- function(target_gene=RAD_27, iteration_max=30, scan_rate=7) {
+execute_and_plot <- function(target_gene=RAD_27, max_iter=30, scan_rate=7) {
     
     # Split target gene into codons
     gene_codons <- split_into_codons(target_gene)
@@ -461,19 +460,20 @@ execute_and_plot <- function(target_gene=RAD_27, iteration_max=30, scan_rate=7) 
     
     # Initialization for iterations and data for plotting
     num_iter <- 0
-    x_data <- numeric(iteration_max)
-    y_data <- numeric(iteration_max)
+    x_data <- numeric(max_iter)
+    y_data <- numeric(max_iter)
     
-    while (num_iter < iteration_max) {
+    while (num_iter < max_iter) {
         # Pick a position to improve
-        pick_result <- pick_position(pos)
+        pick_result <- pick_position(gene_codons, tile_length, pos)
         ind <- pick_result$index
         imp <- pick_result$position
         l_bound <- max(pos[ind - 1], imp - scan_rate)
         r_bound <- min(pos[ind + 1], imp + scan_rate)
         
         # Optimize picked position
-        new_imp <- optimize_position(pos, pos[ind], l_bound, r_bound, 1)
+        new_imp <- optimize_position(
+            gene_codons, tile_length, pos, pos[ind], l_bound, r_bound, TRUE)
         pos[ind] <- new_imp
         
         # Print optimization details
@@ -481,7 +481,7 @@ execute_and_plot <- function(target_gene=RAD_27, iteration_max=30, scan_rate=7) 
         print(paste("Modified pos =", toString(pos)))
         
         # Calculate change in score and update parameters
-        new_score <- calculate_scores(pos)
+        new_score <- calculate_global_score(gene_codons, tile_length, pos)
         curr_score <- new_score
         num_iter <- num_iter + 1
         
