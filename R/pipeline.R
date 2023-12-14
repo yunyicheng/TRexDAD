@@ -1,5 +1,10 @@
 # --- SECTION: Preprocess Data -----------------
 
+# Read overhang fidelity chart
+OVERHANG_FIDELITY <- read.csv("inst/extdata/overhang_fidelity.csv")
+
+# Rad-27 gene for example usage
+RAD_27 <- "AATATGGGTATTAAAGGTTTGAATGCAATTATATCGGAACATGTTCCCTCTGCTATCAGGAAAAGCGATATCAAGAGCTTTTTTGGCAGAAAGGTTGCCATCGATGCCTCTATGTCTCTATATCAGTTTTTAATTGCTGTAAGACAGCAAGACGGTGGGCAGTTGACCAATGAAGCCGGTGAAACAACGTCACACTTGATGGGTATGTTTTATAGGACACTGAGAATGATTGATAACGGTATCAAGCCTTGTTATGTCTTCGACGGCAAACCTCCAGATTTGAAATCTCATGAGTTGACAAAGCGGTCTTCAAGAAGGGTGGAAACAGAAAAAAAACTGGCAGAGGCAACAACAGAATTGGAAAAGATGAAGCAAGAAAGAAGATTGGTGAAGGTTTCAAAAGAGCATAATGAAGAAGCCCAAAAATTACTAGGACTAATGGGAATCCCATATATAATAGCGCCAACGGAAGCTGAGGCTCAATGTGCTGAGTTGGCAAAGAAGGGAAAGGTGTATGCCGCAGCAAGTGAAGATATGGACACACTCTGTTATAGAACACCCTTCTTGTTGAGACATTTGACTTTTTCAGAGGCCAAGAAGGAACCGATTCACGAAATAGATACTGAATTAGTTTTGAGAGGACTCGACTTGACAATAGAGCAGTTTGTTGATCTTTGCATAATGCTTGGTTGTGACTACTGTGAAAGCATCAGAGGTGTTGGTCCAGTGACAGCCTTAAAATTGATAAAAACGCATGGATCCATCGAAAAAATCGTGGAGTTTATTGAATCTGGGGAGTCAAACAACACTAAATGGAAAATCCCAGAAGACTGGCCTTACAAACAAGCAAGAATGCTGTTTCTTGACCCTGAAGTTATAGATGGTAACGAAATAAACTTGAAATGGTCGCCACCAAAGGAGAAGGAACTTATCGAGTATTTATGTGATGATAAGAAATTCAGTGAAGAAAGAGTTAAATCTGGTATATCAAGATTGAAAAAAGGCTTGAAATCTGGCATTCAGGGTAGGTTAGATGGGTTCTTCCAAGTGGTGCCTAAGACAAAGGAACAGCTGGCTGCTGCGGCGAAAAGAGCACAAGAAAATAAAAAATTGAACAAAAATAAGAATAAAGTCACAAAGGGAAGAAGATGAGGG"
 
 #' Split Gene Sequence into Codons
 #'
@@ -77,7 +82,7 @@ oligo_cost <- function(num_tiles, num_codons) {
 #' This function determines the optimal number of tiles for a given number of
 #' codons. It calculates the oligo cost for a range of tile numbers and finds 
 #' the number of tiles that minimizes this cost. In addition, the function computes 
-#' the global length of the tiles and the optimal cost associated with the optimal 
+#' the optimal length of the tiles and the optimal cost associated with the optimal 
 #' number of tiles. The function limits the number of tiles to 50 at maximum, based 
 #' on the reference paper's indication that assembly fidelity decreases with an 
 #' increasing number of overhang pairs.
@@ -85,7 +90,7 @@ oligo_cost <- function(num_tiles, num_codons) {
 #' @param num_codons An integer representing the total number of codons.
 #'
 #' @return A list containing three elements: `optimal_tiles`, the number of tiles 
-#'         that minimize the oligo cost, `length_tiles_global`, the average 
+#'         that minimize the oligo cost, `optimal_tile_length`, the average 
 #'         length of these tiles, and `optimal_cost`, the cost associated with 
 #'         the optimal number of tiles. Additionally, the function prints a 
 #'         structured sentence summarizing these outputs.
@@ -103,32 +108,37 @@ oligo_cost <- function(num_tiles, num_codons) {
 calculate_optimal_tiles <- function(num_codons) {
     num_tiles_range <- 1:50
     costs <- sapply(num_tiles_range, function(x) oligo_cost(x, num_codons))
-    optimal_tiles <- which.min(costs)
+    optimal_num_tiles <- which.min(costs)
     optimal_cost <- min(costs)
-    length_tiles <- round(num_codons / optimal_tiles)
+    optimal_tile_length <- round(num_codons / optimal_tiles)
     
     # Print structured sentence
-    cat("For", num_codons, "codons, the optimal number of tiles is", optimal_tiles, 
-        "with an average length of", length_tiles, "nucleotides per tile and an optimal cost of", 
+    cat("For", num_codons, "codons, the optimal number of tiles is", 
+        optimal_num_tiles, "with an average length of", optimal_tile_length, 
+        "nucleotides per tile and an optimal cost of", 
         optimal_cost, "per codon.\n")
     
-    return(list(optimal_tiles = optimal_tiles, length_tiles = length_tiles, optimal_cost = optimal_cost))
+    return(list(optimal_num_tiles = optimal_num_tiles, 
+                optimal_tile_length = optimal_tile_length, 
+                optimal_cost = optimal_cost))
 }
 
-
+calculate_optimal_tiles(100)
 # --- SECTION: Calculate Scores -----------------
 
 
-#' Get Overhang Sequences
+#' Get Overhang Sequences for Single Tile
 #'
 #' This function calculates the overhang sequences at the specified positions 
 #' in a gene sequence. Depending on the flag, it returns these sequences as 
 #' either `DNAString` objects or plain character strings.
 #'
+#' @param gene_codons A list of splitted codons of target genes
 #' @param start An integer indicating the start position of the tile.
 #' @param end An integer indicating the end position of the tile.
-#' @param flag A binary flag (0 or 1) indicating the return type of the sequences. 
-#'        If 1, sequences are returned as `DNAString` objects; if 0, as character strings.
+#' @param as_dna_strings A boolean indicating the return type of the sequences. 
+#'        If TRUE, sequences are returned as `DNAString` objects; 
+#'        if FALSE, as character strings.
 #'
 #' @return A list containing two elements: `head` and `tail`, representing the 
 #'         overhang sequences at the specified positions.
@@ -137,16 +147,15 @@ calculate_optimal_tiles <- function(num_codons) {
 #' @import forstringr
 #' @export
 #' @examples
-#' # Assuming target_gene is a predefined character vector of codons
-#' target_gene <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
-#' "ATT", "TGA" "TAG" "GAA" "TAT" "AGC")
-#' get_overhangs(2, 4, 1)
-get_overhangs <- function(start, end, flag) {
+#' # Overhangs for sample gene_codons at position(start, end)
+#' get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+#' "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
+get_overhangs <- function(gene_codons, start, end, flag) {
     # Extract the overhangs
-    head <- paste(forstringr::str_right(target_gene[start - 2], 1), 
-                  forstringr::str_left(target_gene[start - 1], 3), sep = "")
-    tail <- paste(forstringr::str_right(target_gene[end + 1], 3), 
-                  forstringr::str_left(target_gene[end + 2], 1), sep = "")
+    head <- paste(forstringr::str_right(gene_codons[start - 2], 1), 
+                  forstringr::str_left(gene_codons[start - 1], 3), sep = "")
+    tail <- paste(forstringr::str_right(gene_codons[end + 1], 3), 
+                  forstringr::str_left(gene_codons[end + 2], 1), sep = "")
     
     # If flag is true, return as DNAString objects; otherwise, as character strings
     if (flag == 1) {
@@ -159,6 +168,10 @@ get_overhangs <- function(start, end, flag) {
     
     return(list(head = head, tail = tail))
 }
+get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
+
+
 
 #' Get All Overhang Sequences for a List of Positions
 #'
@@ -167,19 +180,19 @@ get_overhangs <- function(start, end, flag) {
 #' calculate the head and tail overhangs for each position and accumulates 
 #' them in a list.
 #'
-#' @param pos_lst A numeric vector representing positions in the gene sequence.
+#' @param gene_codons A list of splitted codons of target genes
+#' @param pos_lst A numeric vector representing positions in the gene sequence. Each element in pos_lst is the start of a gene tile.
 #'
 #' @return A list of overhang sequences corresponding to each position in 
 #'         `pos_lst`. Each position contributes two elements to the list: the 
 #'         head and tail overhangs.
 #'
-#' @importFrom Biostrings DNAString
 #' @export
-get_all_overhangs <- function(pos_lst) {
-    all_overhangs <- list()
+get_all_overhangs <- function(gene_codons, pos_lst) {
+    all_overhangs <- vector(mode="list", length=length(pos_lst)-1)
     
     for (i in 1:(length(pos_lst) - 1)) {
-        overhangs <- get_overhangs(pos_lst[i], pos_lst[i + 1] - 1, 1)
+        overhangs <- get_overhangs(gene_codons=gene_codons, pos_lst[i], pos_lst[i + 1] - 1, TRUE)
         all_overhangs <- c(all_overhangs, overhangs$head, overhangs$tail)
     }
     
@@ -198,20 +211,20 @@ get_all_overhangs <- function(pos_lst) {
 #' @return The calculated score for the specified tile, which takes into account
 #'         the palindromicity, length variation, and on-target reactivity.
 #'
-#' @importFrom Biostrings reverseComplement DNAString
+#' @import Biostrings
 #' @examples
 #' # Assuming predefined variables and setup:
-#' # start = 1, end = 3, overhang_fidelity (dataframe), length_tiles_global (value)
+#' # start = 1, end = 3, overhang_fidelity (dataframe), tile_length_global (value)
 #' obtain_score(1, 3)
 #'
 #' @export
-obtain_score <- function(start, end) {
-    overhang_fidelity_df <- as.data.frame(overhang_fidelity)
+calculate_local_score <- function(gene_codons, tile_length, start, end) {
+    overhang_fidelity_df <- as.data.frame(OVERHANG_FIDELITY)
     # Set the first column as row names
     rownames(overhang_fidelity_df) <- overhang_fidelity_df[[1]]
     overhang_fidelity_df <- overhang_fidelity_df[-1]
     
-    overhangs <- get_overhangs(start, end, 1)
+    overhangs <- get_overhangs(gene_codons,start, end, TRUE)
     head <- overhangs$head
     tail <- overhangs$tail
     
@@ -222,7 +235,7 @@ obtain_score <- function(start, end) {
     if (Biostrings::reverseComplement(tail) == tail) {
         palindromicity <- palindromicity + 1
     } else {}
-    delta_len <- end - start + 1 - length_tiles_global
+    delta_len <- end - start + 1 - tile_length
     
     head_comp <- Biostrings::reverseComplement(head)
     tail_comp <- Biostrings::reverseComplement(tail)
@@ -235,7 +248,7 @@ obtain_score <- function(start, end) {
     tail_reactivity<- overhang_fidelity_df[tail, tail_comp]
     
     on_target <- head_reactivity + tail_reactivity
-    local_score <- on_target - palindromicity * 1000 - 5 * delta_len^2
+    local_score <- (on_target - (palindromicity * 1000) - (5 * delta_len^2))
     return(local_score)
 }
 
@@ -250,30 +263,30 @@ obtain_score <- function(start, end) {
 #' @return The global score, which is a composite measure considering the off-target 
 #'         reactions, repetitions in overhangs, and the sum of local scores for each position.
 #'
-#' @importFrom Biostrings reverseComplement DNAString
+#' @import Biostrings, utils
 #' @export
-calculate_scores <- function(pos_lst) {
-    overhang_fidelity_df <- as.data.frame(overhang_fidelity)
+calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
+    overhang_fidelity_df <- as.data.frame(OVERHANG_FIDELITY)
     # Set the first column as row names
     rownames(overhang_fidelity_df) <- overhang_fidelity_df[[1]]
     overhang_fidelity_df <- overhang_fidelity_df[-1]
     
-    overhangs <- get_all_overhangs(pos_lst)
+    overhangs <- get_all_overhangs(gene_codons, pos_lst)
     overhangs_chr <- lapply(overhangs, as.character)
     complements <- lapply(overhangs, Biostrings::reverseComplement)
     complements_chr <- lapply(complements, as.character)
     
     off_reaction <- 0
-    overhang_comb <- combn(overhangs_chr, 2, simplify = FALSE)
-    complement_comb <- combn(complements_chr, 2, simplify = FALSE)
+    overhang_comb <- utils::combn(overhangs_chr, 2, simplify = FALSE)
+    complement_comb <- utils::combn(complements_chr, 2, simplify = FALSE)
     
-    for (a in (1:length(overhang_comb))) {
+    for (a in seq_along(overhang_comb)) {
         oc <- overhang_comb[[a]]
         # off_reaction <- off_reaction + (overhang_fidelity %>% 
         #     filter(Overhang == oc[[1]]) %>% pull(oc[[2]]))
         off_reaction <- overhang_fidelity_df[oc[[1]], oc[[2]]]
     }
-    for (b in (1:length(complement_comb))) {
+    for (b in seq_along(complement_comb)) {
         cc <- complement_comb[[b]]
         # off_reaction <- off_reaction + (overhang_fidelity %>% 
         #     filter(Overhang == cc[[1]] %>% pull(cc[[2]])))
@@ -290,8 +303,12 @@ calculate_scores <- function(pos_lst) {
     }
     
     repetition <- length(overhangs) - length(unique(overhangs))
-    local_score <- sum(sapply(seq_along(pos_lst)[-length(pos_lst)], function(i) obtain_score(pos_lst[i], pos_lst[i + 1] - 1)))
-    global_score <- 50 * local_score - 100 * off_reaction - 1000 * repetition
+    local_score <- sum(sapply(seq_along(pos_lst)[-length(pos_lst)], 
+                              function(i) calculate_local_score(gene_codons, 
+                                                       pos_lst[i], 
+                                                       pos_lst[i + 1] - 1)))
+    global_score <- ((50 * local_score) 
+                     - (100 * off_reaction) - (1000 * repetition))
     
     return(global_score)
 }
@@ -319,12 +336,13 @@ calculate_scores <- function(pos_lst) {
 #' print(picked)
 #'
 #' @export
-pick_position <- function(pos_lst) {
+pick_position <- function(gene_codons, tile_length, pos_lst) {
     score_weights <- numeric(length(pos_lst) - 2)
     indexes <- numeric(length(pos_lst) - 2)
     
     for (i in 1:(length(pos_lst) - 2)) {
-        new_score <- obtain_score(pos_lst[i], pos_lst[i + 1] - 1)
+        new_score <- calculate_local_score(gene_codons, tile_length, 
+                                           pos_lst[i], pos_lst[i + 1] - 1)
         score_weights[i] <- -1 * new_score
         indexes[i] <- i
     }
@@ -339,10 +357,11 @@ pick_position <- function(pos_lst) {
 
 #' Optimize a Single Position in a Position List
 #'
-#' This function optimizes a single position within a list of positions. It adjusts
-#' the specified position to maximize the overall score (obtained via `calculate_scores`).
-#' The function supports different optimization modes, including greedy and Markov Chain
-#' Monte Carlo (MCMC) approaches.
+#' This function optimizes a single position within a list of positions. 
+#' It adjusts the specified position to maximize the overall score 
+#' (obtained via `calculate_global_score`).
+#' The function supports different optimization modes, 
+#' including greedy and Markov Chain Monte Carlo (MCMC) approaches.
 #'
 #' @param pos_lst A numeric vector representing the current list of positions.
 #' @param curr_pos The current position value that needs optimization.
@@ -360,16 +379,16 @@ pick_position <- function(pos_lst) {
 #' print(optimized_pos)
 #'
 #' @export
-optimize_position <- function(pos_lst, curr_pos, left, right, mode) {
+optimize_position <- function(gene_codons, tile_length, pos_lst, 
+                              curr_pos, left, right, mode) {
     score_weights <- numeric()
     indexes <- numeric()
-    copy_pos_lst <- pos_lst
-    original_score <- calculate_scores(copy_pos_lst)
+    original_score <- calculate_global_score(gene_codons, tile_length, pos_lst)
     
     for (n in left:right) {
         curr_pos_ind <- match(curr_pos, copy_pos_lst)
         copy_pos_lst[curr_pos_ind] <- n
-        s <- calculate_scores(copy_pos_lst)
+        s <- calculate_global_scores(gene_codons, tile_length, pos_lst)
         
         if (s >= original_score) {
             indexes <- c(indexes, n)
@@ -415,50 +434,35 @@ optimize_position <- function(pos_lst, curr_pos, left, right, mode) {
 #' Pryor JM, Potapov V, Kucera RB, Bilotti K, Cantor EJ, et al. 
 #'      Enabling one-pot Golden Gate assemblies of unprecedented complexity using data-optimized assembly design. 
 #'      PLOS ONE 15(9): e0238592, 2020.
-#' @import readxl
+#' @import stats
 #' 
 #' @export
-execute_and_plot <- function(iteration_max=30, scan_rate=7) {
+execute_and_plot <- function(target_gene=RAD_27, iteration_max=30, scan_rate=7) {
     
-    # Read overhang fidelity chart
-    overhang_fidelity <<- read.csv("inst/extdata/overhang_fidelity.csv")
+    # Split target gene into codons
+    gene_codons <- split_into_codons(target_gene)
     
-    target_gene <<- "AATATGGGTATTAAAGGTTTGAATGCAATTATATCGGAACATGTTCCCTCTGCTATCAGGAAAAGCGATATCAAGAGCTTTTTTGGCAGAAAGGTTGCCATCGATGCCTCTATGTCTCTATATCAGTTTTTAATTGCTGTAAGACAGCAAGACGGTGGGCAGTTGACCAATGAAGCCGGTGAAACAACGTCACACTTGATGGGTATGTTTTATAGGACACTGAGAATGATTGATAACGGTATCAAGCCTTGTTATGTCTTCGACGGCAAACCTCCAGATTTGAAATCTCATGAGTTGACAAAGCGGTCTTCAAGAAGGGTGGAAACAGAAAAAAAACTGGCAGAGGCAACAACAGAATTGGAAAAGATGAAGCAAGAAAGAAGATTGGTGAAGGTTTCAAAAGAGCATAATGAAGAAGCCCAAAAATTACTAGGACTAATGGGAATCCCATATATAATAGCGCCAACGGAAGCTGAGGCTCAATGTGCTGAGTTGGCAAAGAAGGGAAAGGTGTATGCCGCAGCAAGTGAAGATATGGACACACTCTGTTATAGAACACCCTTCTTGTTGAGACATTTGACTTTTTCAGAGGCCAAGAAGGAACCGATTCACGAAATAGATACTGAATTAGTTTTGAGAGGACTCGACTTGACAATAGAGCAGTTTGTTGATCTTTGCATAATGCTTGGTTGTGACTACTGTGAAAGCATCAGAGGTGTTGGTCCAGTGACAGCCTTAAAATTGATAAAAACGCATGGATCCATCGAAAAAATCGTGGAGTTTATTGAATCTGGGGAGTCAAACAACACTAAATGGAAAATCCCAGAAGACTGGCCTTACAAACAAGCAAGAATGCTGTTTCTTGACCCTGAAGTTATAGATGGTAACGAAATAAACTTGAAATGGTCGCCACCAAAGGAGAAGGAACTTATCGAGTATTTATGTGATGATAAGAAATTCAGTGAAGAAAGAGTTAAATCTGGTATATCAAGATTGAAAAAAGGCTTGAAATCTGGCATTCAGGGTAGGTTAGATGGGTTCTTCCAAGTGGTGCCTAAGACAAAGGAACAGCTGGCTGCTGCGGCGAAAAGAGCACAAGAAAATAAAAAATTGAACAAAAATAAGAATAAAGTCACAAAGGGAAGAAGATGAGGG"
-    target_gene <<- split_into_codons(target_gene)
-    # Determine optimal number of tiles and codons
-    num_codons <<- length(target_gene) - 2
-    num_tiles <<- 1:50
+    # Calculate optimal number of tiles
+    num_codons <- length(gene_codons)
+    tile_result <- (calculate_optimal_tiles(num_codons))
+    num_tile <- tile_result$optimal_num_tiles
+    tile_length <- tile_result$optimal_tile_length
     
-    # Define the range for the number of tiles
-    lower_bound <- 1
-    upper_bound <- 50
-    
-    # Perform optimization
-    optimization_result <- optimize(f = function(x) oligo_cost(x, num_codons),
-                                    interval = c(lower_bound, upper_bound))
-    
-    # Extract the results
-    num_tiles_global <<- round(optimization_result$minimum)
-    length_tiles_global <<- round(num_codons / num_tiles_global)
-    
-    # Print results
-    cat("Optimal number of tiles =", num_tiles_global, "\n")
-    cat("Optimal length of tiles =", length_tiles_global, "\n")
-    
-    # Initialize cassette positions
-    pos <- seq(3, length(target_gene) - 3, by = length_tiles_global)
-    pos <- c(pos, length(target_gene) - 3)
+    # Initialize tile positions
+    pos <- seq(3, length(gene_codons) - 1, by = tile_length)
+    print(pos)
+    pos <- c(pos, length(gene_codons) - 2)
     print(pos)
     # Obtain initial scores
-    curr_score <- calculate_scores(pos)
+    curr_score <- calculate_global_score(gene_codons, tile_length, pos)
     
     print(paste("Initial positions =", toString(pos)))
     print(paste("Initial score =", curr_score))
     
     # Initialization for iterations and data for plotting
     num_iter <- 0
-    x_data <- numeric()
-    y_data <- numeric()
+    x_data <- numeric(iteration_max)
+    y_data <- numeric(iteration_max)
     
     while (num_iter < iteration_max) {
         # Pick a position to improve
