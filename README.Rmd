@@ -19,7 +19,6 @@ A pipeline for the design of mutagenizing oligonucleotides required for Tile Reg
 
 <!-- badges: start -->
 
-![GitHub](https://img.shields.io/github/license/yunyicheng/TRexDAD)
 ![GitHub language count](https://img.shields.io/github/languages/count/yunyicheng/TRexDAD)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/yunyicheng/TRexDAD/main)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/yunyicheng/TRexDAD/main)
@@ -30,15 +29,15 @@ A pipeline for the design of mutagenizing oligonucleotides required for Tile Reg
 
 ## Description
 
-Designing oligonucleotides is a significant part of Tile Region Exchange mutagenesis (T-Rex). It is a DNA assembly technique based on cassette mutagenesis, which utilizes a short, double-stranded oligonucleotide sequence (gene cassette) to replace a fragment of target DNA. It uses complementary restriction enzyme digest ends on the target DNA and gene cassette to achieve specificity. Here is a general overview of Tile Region Exchange and cassette mutagenesis.
+Deep Mutational Scanning (DMS) is a technique that combines mutagenesis, high-throughput sequencing, and functional assays to measure the effects of a large number of genetic variants on a protein's function or phenotype. In order to assess variants, generating a library of mutants is necessary. Tile Region Exchange (T-Rex) Mutagenesis is a high-throughput method to generate all possible single nucleotide variants (SNVs) or missense mutations in a gene. Here is an overview of T-Rex Mutagenesis.
 ![TRex Process Overview](inst/extdata/TRex_overview.png)
-However, derive the assembly design by hand is often error-prone and time-consuming since the fidelity of resulting oligonucleotides does not merely depend on mere rules. Therefore, a data-driven solution is required for designing oligonucleotides with high correct assembly rate []. Although there are web tools currently available for this procedure, few of them utilized Data-optimized Assembly Design.`TRexDAD` is a streamline tool that facilitates oligonucleotide design for Tile Region Exchange Mutagenesis by harnessing Data-optimized Assembly Design (DAD) techniques, along with visualization of optimization process. The package is targeted for researchers who perform Tile Region Exchange Mutagenesis for some genes of interest and need an efficient and reliable streamline to produce mutagenizing oligonucleotides. The scope of the R package is to improve the work flow in Tile Region Exchange Mutagenesis, facilitating open-source researches for interested bioinformatitians and computational biologists. The `TRexDAD` package was developed using `R version 4.3.1 (2023-06-16)`, `Platform: aarch64-apple-darwin20 (64-bit)` and `Running under: macOS Sonoma 14.1.1`.
+However, deriving the assembly design by hand is often error-prone and time-consuming since the fidelity of resulting oligonucleotides does not merely depend on mere rules. Therefore, a data-driven solution is required for designing oligonucleotides with high correct assembly rate [Pryor et al. (2020)](https://doi.org/10.1371/journal.pone.0238592). Although there are web tools currently available for similar mutagenesis procedures, few of them utilize Data-optimized Assembly Design.`TRexDAD` is a streamlined tool that facilitates oligonucleotide design for T-Rex by harnessing DAD techniques, along with visualization of the optimization process. The package is for researchers who perform Tile Region Exchange Mutagenesis for some genes of interest and need an efficient and reliable streamline to produce mutagenizing oligonucleotides. The tool includes functions performing data processing, overhang fidelity score calculations, and optimization of gene tile locations, along with a visualization of the change in fidelity score of resulting overhangs from oligonucleotide designs. The scope of the R package is to improve the work flow in T-Rex Mutagenesis regarding efficiency and accuracy, facilitating open-source researches for interested bioinformatitians and computational biologists. The `TRexDAD` package was developed using `R version 4.3.1 (2023-06-16)`, `Platform: aarch64-apple-darwin20 (64-bit)` and `Running under: macOS Sonoma 14.1.1`.
 
 ## Installation
 
 To install the latest version of the package:
 
-``` {r}
+```{r results='hide', message=FALSE, warning=FALSE}
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 install.packages("devtools")
 library("devtools")
@@ -54,9 +53,8 @@ library("TRexDAD")
 
 ## Package Overview
 
-```{r}
+```{r results='hide', message=FALSE, warning=FALSE}
 ls("package:TRexDAD")
-data(package = "TRexDAD") 
 browseVignettes("TRexDAD")
 ```
 
@@ -90,13 +88,13 @@ the number of tiles and the number of codons.
 
 The author of the package is Yunyi Cheng. 
 
-The author wrote the *execute_and_plot* function, which performs an optimization process to determine the optimal tile positions in a gene sequence and plots the progression of the score over iterations. 
+The author wrote the *execute_and_plot* function, which performs an optimization process to determine the optimal tile positions in a gene sequence and plots the change in the score over iterations. 
 
-Other user-accessible functions are also developed by the author. Most of them serve as helper functions for the *execute_and_plot* function.
+Other user-accessible functions are also developed by the author. Most of them serve as helper functions for the *execute_and_plot* function, but they can also be used indepently for specific tasks.
 
 `Biostrings` R package is used for calculating reverse complement of overhangs in the *get_overhangs* function.
 
-`readxl` R package is used for reading excel file `overhang_fidelity.xlsx` containing tested overhangs's reactivity against each other. `overhang_fidelity.xlsx` is from the study by New England Biolabs.
+`readxl` R package is used for reading excel file `overhang_fidelity.xlsx` containing tested overhangs's reactivity against each other. `overhang_fidelity.xlsx` is from the study by New England Biolabs [Pryor et al. (2020)](https://doi.org/10.1371/journal.pone.0238592).
 
 `forstringr` R package is used for manipulating splitted target gene (a list of codons) in the *get_overhangs* function.
 
@@ -124,10 +122,10 @@ This package was developed as part of an assessment for 2023 BCB410H: Applied Bi
 `TRexDAD` welcomes issues, enhancement requests, and other contributions. To submit an issue, use the [GitHub issues](https://github.com/yunyicheng/TRexDAD/issues). Many thanks to those who provided feedback to improve this package.
 
 ## Workflow Usage
-The main objective of the package is to find optimal assembly design in mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a 5′-3′ flap exo/endonuclease, which is significant for DNA replication.
+The main objective of the package is to find the optimal assembly design for mutagenizing a gene of interest. For illustration purposes, it is set to Rad27 by default; but users are encouraged to use this tool for any genes of interest.
 
-To initiate workflow (with visualization of scores), run:
-```{r} 
+To initiate workflow with the default gene of interest, run:
+```{r results='hide', message=FALSE, warning=FALSE} 
 execute_and_plot()
 ```
 

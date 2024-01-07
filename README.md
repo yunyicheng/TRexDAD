@@ -10,7 +10,6 @@ design (DAD).
 
 <!-- badges: start -->
 
-![GitHub](https://img.shields.io/github/license/yunyicheng/TRexDAD)
 ![GitHub language
 count](https://img.shields.io/github/languages/count/yunyicheng/TRexDAD)
 ![GitHub last commit
@@ -25,30 +24,35 @@ issues](https://img.shields.io/github/issues/yunyicheng/TRexDAD)
 
 ## Description
 
-Designing oligonucleotides is a significant part of Tile Region Exchange
-mutagenesis (T-Rex). It is a DNA assembly technique based on cassette
-mutagenesis, which utilizes a short, double-stranded oligonucleotide
-sequence (gene cassette) to replace a fragment of target DNA. It uses
-complementary restriction enzyme digest ends on the target DNA and gene
-cassette to achieve specificity. Here is a general overview of Tile
-Region Exchange and cassette mutagenesis. ![TRex Process
-Overview](inst/extdata/TRex_overview.png) However, derive the assembly
+Deep Mutational Scanning (DMS) is a technique that combines mutagenesis,
+high-throughput sequencing, and functional assays to measure the effects
+of a large number of genetic variants on a protein’s function or
+phenotype. In order to assess variants, generating a library of mutants
+is necessary. Tile Region Exchange (T-Rex) Mutagenesis is a
+high-throughput method to generate all possible single nucleotide
+variants (SNVs) or missense mutations in a gene. Here is an overview of
+T-Rex Mutagenesis. ![TRex Process
+Overview](inst/extdata/TRex_overview.png) However, deriving the assembly
 design by hand is often error-prone and time-consuming since the
 fidelity of resulting oligonucleotides does not merely depend on mere
 rules. Therefore, a data-driven solution is required for designing
-oligonucleotides with high correct assembly rate \[\]. Although there
-are web tools currently available for this procedure, few of them
-utilized Data-optimized Assembly Design.`TRexDAD` is a streamline tool
-that facilitates oligonucleotide design for Tile Region Exchange
-Mutagenesis by harnessing Data-optimized Assembly Design (DAD)
-techniques, along with visualization of optimization process. The
-package is targeted for researchers who perform Tile Region Exchange
-Mutagenesis for some genes of interest and need an efficient and
-reliable streamline to produce mutagenizing oligonucleotides. The scope
-of the R package is to improve the work flow in Tile Region Exchange
-Mutagenesis, facilitating open-source researches for interested
-bioinformatitians and computational biologists. The `TRexDAD` package
-was developed using `R version 4.3.1 (2023-06-16)`,
+oligonucleotides with high correct assembly rate [Pryor et
+al. (2020)](https://doi.org/10.1371/journal.pone.0238592). Although
+there are web tools currently available for similar mutagenesis
+procedures, few of them utilize Data-optimized Assembly Design.`TRexDAD`
+is a streamlined tool that facilitates oligonucleotide design for T-Rex
+by harnessing DAD techniques, along with visualization of the
+optimization process. The package is for researchers who perform Tile
+Region Exchange Mutagenesis for some genes of interest and need an
+efficient and reliable streamline to produce mutagenizing
+oligonucleotides. The tool includes functions performing data
+processing, overhang fidelity score calculations, and optimization of
+gene tile locations, along with a visualization of the change in
+fidelity score of resulting overhangs from oligonucleotide designs. The
+scope of the R package is to improve the work flow in T-Rex Mutagenesis
+regarding efficiency and accuracy, facilitating open-source researches
+for interested bioinformatitians and computational biologists. The
+`TRexDAD` package was developed using `R version 4.3.1 (2023-06-16)`,
 `Platform: aarch64-apple-darwin20 (64-bit)` and
 `Running under: macOS Sonoma 14.1.1`.
 
@@ -59,14 +63,8 @@ To install the latest version of the package:
 ``` r
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 install.packages("devtools")
-#> 
-#> The downloaded binary packages are in
-#>  /var/folders/j2/0nyw78hx65ld4h4zpmyv3r_40000gn/T//RtmpeJRugb/downloaded_packages
 library("devtools")
-#> Loading required package: usethis
 devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
-#> Skipping install of 'TRexDAD' from a github remote, the SHA1 (cd1f89f1) has not changed since last install.
-#>   Use `force = TRUE` to force installation
 library("TRexDAD")
 ```
 
@@ -79,15 +77,7 @@ library("TRexDAD")
 
 ``` r
 ls("package:TRexDAD")
-#>  [1] "calculate_global_score"  "calculate_local_score"  
-#>  [3] "calculate_optimal_tiles" "execute_and_plot"       
-#>  [5] "get_all_overhangs"       "get_overhangs"          
-#>  [7] "oligo_cost"              "optimize_position"      
-#>  [9] "pick_position"           "split_into_codons"
-data(package = "TRexDAD") 
-#> no data sets found
 browseVignettes("TRexDAD")
-#> No vignettes found by browseVignettes("TRexDAD")
 ```
 
 `TRexDAD` contains 10 functions. Since they are all parts of an
@@ -154,10 +144,11 @@ The author of the package is Yunyi Cheng.
 
 The author wrote the *execute_and_plot* function, which performs an
 optimization process to determine the optimal tile positions in a gene
-sequence and plots the progression of the score over iterations.
+sequence and plots the change in the score over iterations.
 
 Other user-accessible functions are also developed by the author. Most
-of them serve as helper functions for the *execute_and_plot* function.
+of them serve as helper functions for the *execute_and_plot* function,
+but they can also be used indepently for specific tasks.
 
 `Biostrings` R package is used for calculating reverse complement of
 overhangs in the *get_overhangs* function.
@@ -165,7 +156,8 @@ overhangs in the *get_overhangs* function.
 `readxl` R package is used for reading excel file
 `overhang_fidelity.xlsx` containing tested overhangs’s reactivity
 against each other. `overhang_fidelity.xlsx` is from the study by New
-England Biolabs.
+England Biolabs [Pryor et
+al. (2020)](https://doi.org/10.1371/journal.pone.0238592).
 
 `forstringr` R package is used for manipulating splitted target gene (a
 list of codons) in the *get_overhangs* function.
@@ -217,109 +209,15 @@ those who provided feedback to improve this package.
 
 ## Workflow Usage
 
-The main objective of the package is to find optimal assembly design in
-mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a
-5′-3′ flap exo/endonuclease, which is significant for DNA replication.
+The main objective of the package is to find the optimal assembly design
+for mutagenizing a gene of interest. For illustration purposes, it is
+set to Rad27 by default; but users are encouraged to use this tool for
+any genes of interest.
 
-To initiate workflow (with visualization of scores), run:
+To initiate workflow with the default gene of interest, run:
 
 ``` r
 execute_and_plot()
-#> For 385 codons, the optimal number of tiles is 17 with an average length of 23 nucleotides per tile and an optimal cost of 1.685905 per codon.
-#>  [1]   3  26  49  72  95 118 141 164 187 210 233 256 279 302 325 348 371
-#>  [1]   3  26  49  72  95 118 141 164 187 210 233 256 279 302 325 348 371 383
-#> [1] "Initial positions = 3, 26, 49, 72, 95, 118, 141, 164, 187, 210, 233, 256, 279, 302, 325, 348, 371, 383"
-#> [1] "Initial score = 635750"
-#> [1] "Optimized target = 278"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 141, 164, 187, 210, 233, 256, 278, 302, 325, 348, 371, 383"
-#> [1] "#iteration = 1 , current score = 646550"
-#> [1] "Optimized target = 324"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 141, 164, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 2 , current score = 648350"
-#> [1] "Optimized target = 168"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 141, 168, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 3 , current score = 670200"
-#> [1] "Optimized target = 49"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 141, 168, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 4 , current score = 670200"
-#> [1] "Optimized target = 143"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 5 , current score = 793300"
-#> [1] "Optimized target = 49"
-#> [1] "Modified pos = 3, 26, 49, 72, 95, 118, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 6 , current score = 793300"
-#> [1] "Optimized target = 25"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 118, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 7 , current score = 870100"
-#> [1] "Optimized target = 123"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 8 , current score = 871850"
-#> [1] "Optimized target = 348"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 371, 383"
-#> [1] "#iteration = 9 , current score = 871850"
-#> [1] "Optimized target = 368"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 10 , current score = 889000"
-#> [1] "Optimized target = 368"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 11 , current score = 889000"
-#> [1] "Optimized target = 25"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 12 , current score = 889000"
-#> [1] "Optimized target = 368"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 13 , current score = 889000"
-#> [1] "Optimized target = 210"
-#> [1] "Modified pos = 3, 25, 49, 72, 95, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 14 , current score = 889000"
-#> [1] "Optimized target = 96"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 187, 210, 233, 256, 278, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 15 , current score = 893750"
-#> [1] "Optimized target = 277"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 187, 210, 233, 256, 277, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 16 , current score = 906100"
-#> [1] "Optimized target = 96"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 187, 210, 233, 256, 277, 302, 324, 348, 368, 383"
-#> [1] "#iteration = 17 , current score = 906100"
-#> [1] "Optimized target = 346"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 187, 210, 233, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 18 , current score = 911600"
-#> [1] "Optimized target = 185"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 185, 210, 233, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 19 , current score = 924100"
-#> [1] "Optimized target = 25"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 185, 210, 233, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 20 , current score = 924100"
-#> [1] "Optimized target = 25"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 185, 210, 233, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 21 , current score = 924100"
-#> [1] "Optimized target = 302"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 185, 210, 233, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 22 , current score = 924100"
-#> [1] "Optimized target = 324"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 143, 168, 185, 210, 233, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 23 , current score = 924100"
-#> [1] "Optimized target = 148"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 148, 168, 185, 210, 233, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 24 , current score = 931550"
-#> [1] "Optimized target = 235"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 148, 168, 185, 210, 235, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 25 , current score = 941300"
-#> [1] "Optimized target = 235"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 148, 168, 185, 210, 235, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 26 , current score = 941300"
-#> [1] "Optimized target = 49"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 148, 168, 185, 210, 235, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 27 , current score = 941300"
-#> [1] "Optimized target = 235"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 148, 168, 185, 210, 235, 256, 277, 302, 324, 346, 368, 383"
-#> [1] "#iteration = 28 , current score = 941300"
-#> [1] "Optimized target = 364"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 148, 168, 185, 210, 235, 256, 277, 302, 324, 346, 364, 383"
-#> [1] "#iteration = 29 , current score = 942600"
-#> [1] "Optimized target = 344"
-#> [1] "Modified pos = 3, 25, 49, 72, 96, 123, 148, 168, 185, 210, 235, 256, 277, 302, 324, 344, 364, 383"
-#> [1] "#iteration = 30 , current score = 944300"
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
