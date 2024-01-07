@@ -4,7 +4,7 @@
 # TRexDAD
 
 A pipeline for the design of mutagenizing oligonucleotides required for
-Tile Region Exchange Mutagenesis (T-Rex), which is a crucial step for
+Tile Region Exchange(T-Rex) Mutagenesis, which is a crucial step for
 deep mutation scanning (DMS), by harnessing data-optimized assembly
 design (DAD).
 
@@ -42,17 +42,19 @@ there are web tools currently available for similar mutagenesis
 procedures, few of them utilize Data-optimized Assembly Design.`TRexDAD`
 is a streamlined tool that facilitates oligonucleotide design for T-Rex
 by harnessing DAD techniques, along with visualization of the
-optimization process. The package is for researchers who perform Tile
-Region Exchange Mutagenesis for some genes of interest and need an
-efficient and reliable streamline to produce mutagenizing
-oligonucleotides. The tool includes functions performing data
-processing, overhang fidelity score calculations, and optimization of
-gene tile locations, along with a visualization of the change in
-fidelity score of resulting overhangs from oligonucleotide designs. The
-scope of the R package is to improve the work flow in T-Rex Mutagenesis
-regarding efficiency and accuracy, facilitating open-source researches
-for interested bioinformatitians and computational biologists. The
-`TRexDAD` package was developed using `R version 4.3.1 (2023-06-16)`,
+optimization process.
+
+The package is for researchers who perform Tile Region Exchange
+Mutagenesis for some genes of interest and need an efficient and
+reliable streamline to produce mutagenizing oligonucleotides. The tool
+includes functions performing data processing, overhang fidelity score
+calculations, and optimization of gene tile locations, along with a
+visualization of the change in fidelity score of resulting overhangs
+from oligonucleotide designs. The scope of the R package is to improve
+the work flow in T-Rex Mutagenesis regarding efficiency and accuracy,
+facilitating open-source researches for interested bioinformatitians and
+computational biologists. The `TRexDAD` package was developed using
+`R version 4.3.1 (2023-06-16)`,
 `Platform: aarch64-apple-darwin20 (64-bit)` and
 `Running under: macOS Sonoma 14.1.1`.
 
@@ -179,6 +181,11 @@ of tiles. It is used in *calculate_optimal_tiles* function and
   DNA ligase and application to DNA assembly. *ACS Synthetic Biology*,
   **7**(11), 2665–2674.
 
+- Eremin, I. I. et al. 2Approximation algorithm for finding a clique
+  with minimum weight of vertices and edges (2014). *Proc. Steklov Inst.
+  Math.*, **284**, 87–95.
+  [DOI:10.1134/S0081543814040101](https://doi.org/10.1134/S0081543814040101)
+
 - Pagès H, Aboyoun P, Gentleman R, DebRoy S (2023). Biostrings:
   Efficient manipulation of biological strings. Bioconductor.
   [doi:10.18129/B9.bioc.Biostrings](https://doi.org/10.18129/B9.bioc.Biostrings),
@@ -207,7 +214,7 @@ contributions. To submit an issue, use the [GitHub
 issues](https://github.com/yunyicheng/TRexDAD/issues). Many thanks to
 those who provided feedback to improve this package.
 
-## Workflow Usage
+## Example Workflow Usage
 
 The main objective of the package is to find the optimal assembly design
 for mutagenizing a gene of interest. For illustration purposes, it is
@@ -221,6 +228,9 @@ execute_and_plot()
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+For comprehensive explanation of workflow, please see the tool’s
+vignettes.
 
 ## Package Structure
 
