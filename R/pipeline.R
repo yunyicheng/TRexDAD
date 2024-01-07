@@ -73,6 +73,14 @@ split_into_codons <- function(gene_sequence) {
 #' 
 #' @export
 oligo_cost <- function(num_tiles, num_codons) {
+    # Check for negative input values
+    if (num_tiles <= 0) {
+        stop("The number of tiles should be a positive integer.")
+    } else {}
+    if (num_codons <= 0) {
+        stop("The number of codons should be a positive integer.")
+    } else {}
+    
     ccdB_cost <- num_tiles * 16
     one_br_per_tile <- (num_codons * 3 / num_tiles + 30) * 0.01
     complete_replacement <- one_br_per_tile * num_codons
