@@ -36,8 +36,8 @@ Overview](inst/extdata/TRex_overview.png) However, deriving the assembly
 design by hand is often error-prone and time-consuming since the
 fidelity of resulting oligonucleotides does not merely depend on mere
 rules. Therefore, a data-driven solution is required for designing
-oligonucleotides with high correct assembly rate [Pryor et
-al. (2020)](https://doi.org/10.1371/journal.pone.0238592). Although
+oligonucleotides with high correct assembly rate ([Pryor et
+al. (2020)](https://doi.org/10.1371/journal.pone.0238592)). Although
 there are web tools currently available for similar mutagenesis
 procedures, few of them utilize Data-optimized Assembly Design.`TRexDAD`
 is a streamlined tool that facilitates oligonucleotide design for T-Rex
@@ -156,8 +156,8 @@ overhangs in the *get_overhangs* function.
 `readxl` R package is used for reading excel file
 `overhang_fidelity.xlsx` containing tested overhangs’s reactivity
 against each other. `overhang_fidelity.xlsx` is from the study by New
-England Biolabs [Pryor et
-al. (2020)](https://doi.org/10.1371/journal.pone.0238592).
+England Biolabs ([Pryor et
+al. (2020)](https://doi.org/10.1371/journal.pone.0238592)).
 
 `forstringr` R package is used for manipulating splitted target gene (a
 list of codons) in the *get_overhangs* function.
