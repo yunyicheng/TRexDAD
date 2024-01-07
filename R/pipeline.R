@@ -202,6 +202,7 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
     return(all_overhangs)
 }
 
+
 #' Obtain Score for a Given Tile
 #'
 #' This function calculates a score for a specific tile within a gene sequence.
