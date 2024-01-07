@@ -35,7 +35,7 @@ require("devtools")
 devtools::install_github("yunyicheng/TRexDAD")
 
 # Load the package
-library(TMscoreAlign)
+library(TRexDAD)
 ```
 
 # Introduction
@@ -73,7 +73,7 @@ the number of tiles and the number of codons.
 # Workflow Usage
 The main objective of the package is to find optimal assembly design in mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a 5′-3′ flap exo/endonuclease, which is significant for DNA replication.
 
-To initiate workflow (with visualization of scores), run:
+To initiate workflow with visualization of scores, run:
 ```{r}
 execute_and_plot()
 ```
