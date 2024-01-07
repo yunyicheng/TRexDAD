@@ -1,5 +1,5 @@
 ---
-title: "Introduction to TRexDAD"
+title: "A Tutorial for TRexDAD"
 author: "Yunyi Cheng"
 date: "`r format(Sys.time(), '%d %b %Y')`"
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     number_sections: false
 vignette: >
-  %\VignetteIndexEntry{Introduction to TRexDAD}
+  %\VignetteIndexEntry{A Tutorial for TRexDAD}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -39,7 +39,12 @@ library(TRexDAD)
 ```
 
 # Introduction
-TRexDAD is a pipeline for the design of mutagenizing oligonucleotides required for Tile Region Exchange Mutagenesis (T-Rex), which is a crucial step for deep mutation scanning (DMS), by harnessing data-optimized assembly design (DAD). In DMS, all variants of the target gene will 
+`TRexDAD` is a pipeline for the design of mutagenizing oligonucleotides required for Tile Region Exchange(T-Rex) Mutagenesis, which is a crucial step for deep mutation scanning (DMS), by harnessing data-optimized assembly design (DAD). DMS is a technique that combines mutagenesis, high-throughput sequencing, and functional assays to measure the effects of a large number of genetic variants on a protein's function or phenotype. In order to assess variants, generating a library of mutants is necessary. Tile Region Exchange (T-Rex) Mutagenesis is a high-throughput method to generate all possible single nucleotide variants (SNVs) or missense mutations in a gene. Here is an overview of T-Rex Mutagenesis.
+![TRex Process Overview](inst/extdata/TRex_overview.png)
+
+`TRerxDAD` utilizes an overhang fidelity chart from a previous study to facilitate the seamless design of the mutagenizing oligos required for T-Rex. Briefly, the tool begins by assigning a score to tile locations. This score is a function of the tile sizes, whether tiles at particular positions would generate palindromic or repeating overhangs after BsaI restriction digest, and ligation fidelity as determined by New England Biolabs ([Pryor et al. (2020)](https://doi.org/10.1371/journal.pone.0238592)). In the study by New England Biolabs, the authors analyzed the propensity for a specific 4 bp overhang to ligate to all other possible 4 bp overhangs. The fraction of reads observed with correct or incorrect ligations is given in the study and forms the basis of our ligation fidelity score. Ligation fidelity is calculated by the On-Target ligation minus the Off-Target ligations to all other overhangs produced by the current tile locations. Tile locations with more desirable qualities (such as high fidelity overhangs) are given a higher score.
+
+The optimal positions for the tile boundaries cannot be easily obtained. This is because modifying the boundaries of a single tile will strongly affect the optimality of other tiles (due to the ligation score and the tile size score). I believe that this problem reduces to the well-known clique problem in computational complexity and is therefore NP-complete (no efficient solution can be found) ([Eremin et al. (2014)](https://doi.org/10.1134/S0081543814040101)). However, finding the optimal tile positions is not compulsory; it is adequate to find decent solutions for assembly design. Thus, I developed a gradient descent algorithm that randomly 'wiggles' tile positions, accepting solutions only if they increase the global score.
 
 # Package Overview
 
@@ -70,7 +75,7 @@ the number of tiles and the number of codons.
 
 10. ***optimize_position*** optimizes a single position within a list of positions. It adjusts the specified position to maximize the overall score (obtained via `calculate_scores`). The function supports different optimization modes, including greedy and Markov Chain Monte Carlo (MCMC) approaches.
 
-# Workflow Usage
+# Workflow
 The main objective of the package is to find optimal assembly design in mutagenizing Rad27. The RAD27 gene of Saccharomyces cerevisiae encodes a 5′-3′ flap exo/endonuclease, which is significant for DNA replication.
 
 To initiate workflow with visualization of scores, run:
