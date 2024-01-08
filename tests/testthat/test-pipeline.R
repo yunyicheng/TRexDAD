@@ -166,3 +166,45 @@ test_that("get_all_overhangs handles invalid input", {
                                    "The last position in pos_lst must 
                                    equal length(gene_codons) - 1."))
 })
+
+## Test calculate_local_score function ----
+
+test_that("calculate_local_score calculates correct score", {
+    gene_codons <- c("ATG", "CAG", "TAC", "GGA", "TGA", "TCA")
+    tile_length <- 4
+    start <- 3
+    end <- 4
+    result <- calculate_local_score(gene_codons, tile_length, start, end)
+    expected_score <- 988
+    
+    expect_equal(result, expected_score)
+})
+
+test_that("calculate_local_score handles invalid codons", {
+    gene_codons <- c("ATG", "CAG", "XXX", "GGA", "XXY", "TCA")
+    tile_length <- 4
+    start <- 3
+    end <- 4
+    
+    expect_error(calculate_local_score(gene_codons, tile_length, start, end))
+    
+    # Additional tests for invalid tile_length, start, end values
+    expect_error(calculate_local_score(gene_codons, -1, start, end))  # Invalid tile_length
+    expect_error(calculate_local_score(gene_codons, tile_length, 0, end))  # Invalid start
+    expect_error(calculate_local_score(gene_codons, tile_length, start, 6))  # Invalid end
+})
+
+test_that("calculate_local_score handles invalid parameters", {
+    gene_codons <- c("ATG", "CAG", "TAC", "GGA", "TGA", "TCA")
+    tile_length <- 4
+    start <- 3
+    end <- 4
+    
+    # Invalid tile_length
+    expect_error(calculate_local_score(gene_codons, -1, start, end))
+    # Invalid start
+    expect_error(calculate_local_score(gene_codons, tile_length, 0, end))
+    # Invalid end
+    expect_error(calculate_local_score(gene_codons, tile_length, start, 6))
+})
+

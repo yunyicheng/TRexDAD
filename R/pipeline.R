@@ -1,4 +1,5 @@
-# --- SECTION: Preprocess Data -----------------
+# --- SECTION: Setup and Global Variable Initialization -----------------
+
 
 # Read overhang fidelity chart
 OVERHANG_FIDELITY <- read.csv("inst/extdata/overhang_fidelity.csv")
@@ -10,6 +11,10 @@ RAD_27 <- "AATATGGGTATTAAAGGTTTGAATGCAATTATATCGGAACATGTTCCCTCTGCTATCAGGAAAAGCGAT
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("Biostrings")
+
+
+# --- SECTION: Preprocess Data -----------------
+
 
 #' Split Gene Sequence into Codons
 #'
@@ -221,6 +226,17 @@ get_overhangs <- function(gene_codons, start, end, as_dna_strings) {
 #'         head and tail overhangs.
 #'
 #' @export
+#' 
+#' @references 
+#' Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of 
+#' unprecedented complexity using data-optimized assembly design. PLOS ONE 15, 
+#' e0238592 (2020).
+#' 
+#' @examples
+#' gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+#'                  "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+#' pos_lst <- c(3, 5, length(gene_codons) - 1)
+#' get_all_overhangs(gene_codons, pos_lst)
 get_all_overhangs <- function(gene_codons, pos_lst) {
     if (any(pos_lst <= 0)) {
         stop("pos_lst must contain only positive integers.")
@@ -239,11 +255,6 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
     return(all_overhangs)
 }
 
-gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
-                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
-pos_lst <- c(3, 5, length(gene_codons) - 1)  # Correct positions
-    
-get_all_overhangs(gene_codons, pos_lst)
 
 #' Obtain Score for a Given Tile
 #'
@@ -251,20 +262,37 @@ get_all_overhangs(gene_codons, pos_lst)
 #' The score is based on palindromicity, length variation from a global standard,
 #' and on-target reactivity, using a pre-defined overhang fidelity dataframe.
 #'
+#' @param gene_codons A vector of DNA codons.
+#' @param tile_length An integer representing the expected length of the tile.
 #' @param start An integer representing the start position of the tile in the gene sequence.
 #' @param end An integer representing the end position of the tile in the gene sequence.
 #'
-#' @return The calculated score for the specified tile, which takes into account
-#'         the palindromicity, length variation, and on-target reactivity.
+#' @return An integer representing the calculated score for the specified tile.
+#'         The score takes into account the palindromicity, length variation,
+#'         and on-target reactivity of the tile's overhang sequences.
 #'
 #' @importFrom Biostrings reverseComplement
-#' @examples
-#' # Assuming predefined variables and setup:
-#' # start = 1, end = 3, overhang_fidelity (dataframe), tile_length_global (value)
-#' obtain_score(1, 3)
-#'
 #' @export
+#' 
+#' @references
+#' Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of 
+#' unprecedented complexity using data-optimized assembly design. PLOS ONE 15, 
+#' e0238592 (2020).
+#' 
+#' @examples
+#' # Example usage with predefined variables and setup:
+#' gene_codons <- c("ATG", "CAG", "TAC", "GGA", "TGA", "TCA")
+#' tile_length <- 4
+#' start <- 3
+#' end <- 4
+#' calculate_local_score(gene_codons, tile_length, start, end)
 calculate_local_score <- function(gene_codons, tile_length, start, end) {
+    # Validate inputs
+    if (tile_length <= 0) {
+        stop("Tile length must be a positive integer.")
+    }
+    
+    # Load from global variable
     overhang_fidelity_df <- as.data.frame(OVERHANG_FIDELITY)
     # Set the first column as row names
     rownames(overhang_fidelity_df) <- overhang_fidelity_df[[1]]
@@ -312,6 +340,12 @@ calculate_local_score <- function(gene_codons, tile_length, start, end) {
 #' @importFrom Biostrings reverseComplement
 #' @import utils
 #' @export
+#' 
+#' @references
+#' Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of 
+#' unprecedented complexity using data-optimized assembly design. PLOS ONE 15, 
+#' e0238592 (2020).
+#' 
 calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
     overhang_fidelity_df <- as.data.frame(OVERHANG_FIDELITY)
     # Set the first column as row names
@@ -504,8 +538,9 @@ execute_and_plot <- function(target_gene = RAD_27,
     
     # Initialize tile positions
     pos <- seq(3, length(gene_codons) - 1, by = tile_length)
-    pos <- c(pos, length(gene_codons) - 2)
+    pos <- c(pos, length(gene_codons) - 1)
     print(length(gene_codons))
+    print(pos)
     # Obtain initial scores
     curr_score <- calculate_global_score(gene_codons, tile_length, pos)
     
