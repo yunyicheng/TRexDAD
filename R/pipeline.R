@@ -119,6 +119,11 @@ oligo_cost <- function(num_tiles, num_codons) {
 #'
 #' @export
 calculate_optimal_tiles <- function(num_codons) {
+    # Validate num_codons input
+    if (num_codons <= 0) {
+        stop("The number of codons should be a positive integer.")
+    }
+    
     num_tiles_range <- 1:50
     costs <- sapply(num_tiles_range, function(x) oligo_cost(x, num_codons))
     optimal_num_tiles <- which.min(costs)

@@ -44,3 +44,36 @@ test_that("oligo_cost throws an error for zero or negative codons", {
     expect_error(oligo_cost(10, 0), "The number of codons should be a positive integer.")
     expect_error(oligo_cost(10, -5), "The number of codons should be a positive integer.")
 })
+
+
+# Test calculate_optimal_tiles function
+
+test_that("calculate_optimal_tiles returns correct structure", {
+    result <- calculate_optimal_tiles(100)
+    
+    # Check if it's a list and has the correct elements
+    expect_type(result, "list")
+    expect_true(all(c("optimal_num_tiles", "optimal_tile_length", "optimal_cost") %in% names(result)))
+})
+
+test_that("calculate_optimal_tiles returns valid values", {
+    result <- calculate_optimal_tiles(100)
+    
+    # Validate the types of the list elements
+    expect_type(result$optimal_tile_length, "double")
+    expect_type(result$optimal_cost, "double")
+    
+    # Check if the values make sense
+    expect_true(result$optimal_num_tiles > 0)
+    expect_true(result$optimal_tile_length > 0)
+    expect_true(result$optimal_cost > 0)
+})
+
+test_that("calculate_optimal_tiles handles invalid input", {
+    # Example with zero codons
+    expect_error(calculate_optimal_tiles(0), "The number of codons should be a positive integer.")
+    
+    # Example with negative codons
+    expect_error(calculate_optimal_tiles(-100), "The number of codons should be a positive integer.")
+})
+
