@@ -122,7 +122,7 @@ calculate_optimal_tiles <- function(num_codons) {
     # Validate num_codons input
     if (num_codons <= 0) {
         stop("The number of codons should be a positive integer.")
-    }
+    } else {}
     
     num_tiles_range <- 1:50
     costs <- sapply(num_tiles_range, function(x) oligo_cost(x, num_codons))
@@ -164,11 +164,29 @@ calculate_optimal_tiles <- function(num_codons) {
 #' @import forstringr
 #' @importFrom Biostrings DNAString
 #' @export
+#' 
+#' @references 
+#' Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of 
+#' unprecedented complexity using data-optimized assembly design. PLOS ONE 15, 
+#' e0238592 (2020).
+#' 
 #' @examples
 #' # Overhangs for sample gene_codons at position(start, end)
 #' get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
 #' "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
 get_overhangs <- function(gene_codons, start, end, as_dna_strings) {
+    # Check if start and end positions are valid
+    if (start <= 2 || end > length(gene_codons) - 2 || end < start) {
+        stop("Invalid start or end positions.")
+    } else {}
+    
+    # Check for invalid input codons
+    for(codon in gene_codons) {
+        if (!grepl("^[ACGT]{3}$", codon)) {
+            stop("Invalid codon detected.")
+        }
+    }
+    
     # Extract the overhangs
     head <- paste(forstringr::str_right(gene_codons[start - 2], 1), 
                   forstringr::str_left(gene_codons[start - 1], 3), sep = "")
@@ -186,9 +204,6 @@ get_overhangs <- function(gene_codons, start, end, as_dna_strings) {
     # print(list(head = head, tail = tail))
     return(list(head = head, tail = tail))
 }
-# get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
-#                 "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
-
 
 
 #' Get All Overhang Sequences for a List of Positions
@@ -207,6 +222,15 @@ get_overhangs <- function(gene_codons, start, end, as_dna_strings) {
 #'
 #' @export
 get_all_overhangs <- function(gene_codons, pos_lst) {
+    if (any(pos_lst <= 0)) {
+        stop("pos_lst must contain only positive integers.")
+    } else {}
+    
+    # Check if the last position in pos_lst is equal to the length of gene_codons
+    if (tail(pos_lst, 1) != length(gene_codons) - 1) {
+        stop("The last position in pos_lst must equal length(gene_codons) - 1.")
+    } else {}
+    
     all_overhangs <- list()
     for (i in 1:(length(pos_lst) - 1)) {
         overhangs <- get_overhangs(gene_codons, pos_lst[i], pos_lst[i + 1] - 1, TRUE)
@@ -215,6 +239,11 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
     return(all_overhangs)
 }
 
+gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+pos_lst <- c(3, 5, length(gene_codons) - 1)  # Correct positions
+    
+get_all_overhangs(gene_codons, pos_lst)
 
 #' Obtain Score for a Given Tile
 #'
@@ -444,19 +473,25 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #' @param max_iter The maximum number of iterations for the optimization process (default: 30).
 #' @param scan_rate The range within which to scan for optimizing tile positions (default: 7).
 #'
-#' @return This function does not return a value; it generates a plot showing the score
-#'         optimization over iterations.
+#' @return This function does not return a value; it generates a plot showing 
+#' the score optimization over iterations.
+#' 
 #' @references 
-#' Vladimir Potapov, Jennifer L. Ong, Rebecca B. Kucera, Bradley W. Langhorst, Katharina Bilotti, John M. Pryor, Eric J. Cantor, Barry Canton, Thomas F. Knight, Thomas C. Jr. Evans, and Gregory J. S. Lohman. 
-#'      Comprehensive Profiling of Four Base Overhang Ligation Fidelity by T4 DNA Ligase and Application to DNA Assembly. 
+#' Vladimir Potapov, Jennifer L. Ong, Rebecca B. Kucera, Bradley W. Langhorst, 
+#'      Katharina Bilotti, John M. Pryor, Eric J. Cantor, Barry Canton, 
+#'      Thomas F. Knight, Thomas C. Jr. Evans, and Gregory J. S. Lohman. 
+#'      Comprehensive Profiling of Four Base Overhang Ligation Fidelity by 
+#'      T4 DNA Ligase and Application to DNA Assembly. 
 #'      ACS Synthetic Biology, 7(11):2665–2674, 2018.
 #' Pryor JM, Potapov V, Kucera RB, Bilotti K, Cantor EJ, et al. 
-#'      Enabling one-pot Golden Gate assemblies of unprecedented complexity using data-optimized assembly design. 
+#'      Enabling one-pot Golden Gate assemblies of unprecedented 
+#'      complexity using data-optimized assembly design. 
 #'      PLOS ONE 15(9): e0238592, 2020.
 #' @import stats
 #' 
 #' @export
-execute_and_plot <- function(target_gene=RAD_27, max_iter=30, scan_rate=7) {
+execute_and_plot <- function(target_gene = RAD_27, 
+                             max_iter = 30, scan_rate = 7) {
     
     # Split target gene into codons
     gene_codons <- split_into_codons(target_gene)
@@ -469,9 +504,8 @@ execute_and_plot <- function(target_gene=RAD_27, max_iter=30, scan_rate=7) {
     
     # Initialize tile positions
     pos <- seq(3, length(gene_codons) - 1, by = tile_length)
-    print(pos)
     pos <- c(pos, length(gene_codons) - 2)
-    print(pos)
+    print(length(gene_codons))
     # Obtain initial scores
     curr_score <- calculate_global_score(gene_codons, tile_length, pos)
     

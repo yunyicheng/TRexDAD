@@ -1,6 +1,8 @@
 library(testthat)
 
-# Test split_into_codons function
+# --- SECTION: Test Preprocess Data -----------------
+
+## Test split_into_codons function ----
 
 test_that("split_into_codons returns correct codons for valid input", {
     gene_seq <- "GCTATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAGATC"
@@ -24,7 +26,7 @@ test_that("split_into_codons throws an error if 'ATG' is not the second codon", 
 })
 
 
-# Test oligo_cost function
+## Test oligo_cost function ----
 
 test_that("oligo_cost calculates correctly for normal input", {
     expect_equal(oligo_cost(10, 100), 2.2)
@@ -46,7 +48,7 @@ test_that("oligo_cost throws an error for zero or negative codons", {
 })
 
 
-# Test calculate_optimal_tiles function
+## Test calculate_optimal_tiles function ----
 
 test_that("calculate_optimal_tiles returns correct structure", {
     result <- calculate_optimal_tiles(100)
@@ -77,3 +79,90 @@ test_that("calculate_optimal_tiles handles invalid input", {
     expect_error(calculate_optimal_tiles(-100), "The number of codons should be a positive integer.")
 })
 
+
+# --- SECTION: Test Calculate Scores -----------------
+
+## Test get_overhangs function ----
+
+test_that("get_overhangs calculates correct sequences", {
+    gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TAT", "AGC")
+    result <- get_overhangs(gene_codons, 3, 4, FALSE)
+    
+    # Check if head and tail sequences are correct
+    # head should be last 1 of GAG (start - 2) + first 3 of CTG (start - 1) = "GCTG"
+    # tail should be last 3 of TGC (end + 1) + first 1 of CGG (end + 2) = "TGCC"
+    expect_equal(result$head, "GCTG")
+    expect_equal(result$tail, "TGCC")
+})
+
+test_that("get_overhangs returns DNAString objects when as_dna_strings is TRUE", {
+    gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TAT", "AGC")
+    result <- get_overhangs(gene_codons, 3, 4, TRUE)
+    
+    # Check if head and tail are DNAString objects
+    expect_s4_class(result$head, "DNAString")
+    expect_s4_class(result$tail, "DNAString")
+})
+
+test_that("get_overhangs returns character strings when as_dna_strings is FALSE", {
+    gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TAT", "AGC")
+    result <- get_overhangs(gene_codons, 3, 4, FALSE)
+    
+    # Check if head and tail are character strings
+    expect_type(result$head, "character")
+    expect_type(result$tail, "character")
+})
+
+test_that("get_overhangs handles invalid input", {
+    # Invalid codon test might be more appropriate for a function that validates codons,
+    # so adjust these tests according to the actual capabilities of your function
+    gene_codons <- c("GAG", "CTG", "XTG", "AGT", "GAA", "TGG")  # 'X' is an invalid nucleotide
+    expect_error(get_overhangs(gene_codons, 3, 4, FALSE), "Invalid codon detected.")
+    
+    # Test for out of bounds start and end positions
+    gene_codons <- c("GAG", "CTG", "TGT")
+    # start <= 2
+    expect_error(get_overhangs(gene_codons, 0, 4, FALSE), "Invalid start or end positions.")
+    # end + 2 > length(gene_codons)
+    expect_error(get_overhangs(gene_codons, 2, 4, FALSE), "Invalid start or end positions.")  
+})
+
+
+## Test get_all_overhangs function ----
+
+test_that("get_all_overhangs returns correct overhang sequences", {
+    gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+    pos_lst <- c(3, 5, length(gene_codons) - 1)
+    
+    result <- get_all_overhangs(gene_codons, pos_lst)
+    
+    # Check the size of the result list
+    expect_length(result, (length(pos_lst) - 1) * 2)
+    
+    # Check if the overhang sequences are DNAString objects
+    expect_true(all(sapply(result, class) == "DNAString"))
+    
+    # Checks for the overhang sequences based on gene_codons and pos_lst
+    expect_equal(result[[1]], DNAString("GCTG"))
+    expect_equal(result[[2]], DNAString("TGCC"))
+    expect_equal(result[[3]], DNAString("TAGG"))
+    expect_equal(result[[4]], DNAString("TGAA"))
+})
+
+test_that("get_all_overhangs handles invalid input", {
+    gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+    
+    # Invalid because the last position is not the length of gene_codons - 1
+    expect_error(get_all_overhangs(gene_codons, c(-3, 12)), 
+                 "pos_lst must contain only positive integers.")
+    
+    # Invalid because it contains zero (non-positive integer)
+    expect_error(get_all_overhangs(gene_codons, c(0, length(gene_codons) - 1), 
+                                   "The last position in pos_lst must 
+                                   equal length(gene_codons) - 1."))
+})
