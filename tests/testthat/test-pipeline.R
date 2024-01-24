@@ -169,6 +169,10 @@ test_that("get_all_overhangs handles invalid input", {
     # Invalid because pos_lst is not increasing
     expect_error(get_all_overhangs(gene_codons, c(11, 11, 11),
                                    "pos_lst must be in increasing order."))
+    
+    # Invalid because pos_lst has only two positions
+    expect_error(get_all_overhangs(gene_codons, c(8, 11),
+                            "pos_lst must contain at least three positions."))
 })
 
 ## Test calculate_local_score function ----

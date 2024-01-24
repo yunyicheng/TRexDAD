@@ -251,8 +251,6 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
         stop("pos_lst must be in increasing order.")
     } else {}
     
-    # Check if the pos_lst is an increasing list
-    
     all_overhangs <- list()
     for (i in 1:(length(pos_lst) - 2)) {
         overhangs <- get_overhangs(gene_codons, pos_lst[i], pos_lst[i + 1] - 1, TRUE)
