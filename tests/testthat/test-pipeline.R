@@ -136,7 +136,7 @@ test_that("get_overhangs handles invalid input", {
 test_that("get_all_overhangs returns correct overhang sequences", {
     gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
                      "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
-    pos_lst <- c(3, 5, length(gene_codons) - 1)
+    pos_lst <- c(3, 5, length(gene_codons) - 2)
     
     result <- get_all_overhangs(gene_codons, pos_lst)
     
@@ -162,9 +162,12 @@ test_that("get_all_overhangs handles invalid input", {
                  "pos_lst must contain only positive integers.")
     
     # Invalid because it contains zero (non-positive integer)
-    expect_error(get_all_overhangs(gene_codons, c(0, length(gene_codons) - 1), 
+    expect_error(get_all_overhangs(gene_codons, c(3, length(gene_codons) - 1), 
                                    "The last position in pos_lst must 
-                                   equal length(gene_codons) - 1."))
+                                   equal length(gene_codons) - 2."))
+    
+    expect_error(get_all_overhangs(gene_codons, c(11, 8, 3),
+                                   "pos_lst must be in increasing order."))
 })
 
 ## Test calculate_local_score function ----
@@ -187,11 +190,6 @@ test_that("calculate_local_score handles invalid codons", {
     end <- 4
     
     expect_error(calculate_local_score(gene_codons, tile_length, start, end))
-    
-    # Additional tests for invalid tile_length, start, end values
-    expect_error(calculate_local_score(gene_codons, -1, start, end))  # Invalid tile_length
-    expect_error(calculate_local_score(gene_codons, tile_length, 0, end))  # Invalid start
-    expect_error(calculate_local_score(gene_codons, tile_length, start, 6))  # Invalid end
 })
 
 test_that("calculate_local_score handles invalid parameters", {
@@ -207,4 +205,52 @@ test_that("calculate_local_score handles invalid parameters", {
     # Invalid end
     expect_error(calculate_local_score(gene_codons, tile_length, start, 6))
 })
+
+
+## Test calculate_global_score function
+
+# library(testthat)
+# library(Biostrings)
+# library(utils)
+
+## Test calculate_global_score function----
+
+test_that("calculate_global_score calculates correct global score", {
+    gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+    tile_length <- 5
+    pos_lst <- c(3, 6, 8, 11)
+    
+    expected_global_score <- 122700
+    result <- calculate_global_score(gene_codons, tile_length, pos_lst)
+    
+    expect_equal(result, expected_global_score)
+})
+
+test_that("calculate_local_score handles invalid codons", {
+    gene_codons <- c("ATG", "CAG", "XXX", "GGA", "XXY", "TCA")
+    tile_length <- 5
+    expect_error(calculate_global_score(gene_codons, tile_length, c(3, 4)))
+})
+
+test_that("calculate_global_score handles invalid pos_lst and tile length", {
+    gene_codons <- c("ATG", "CAG", "TAC", "GGA", "TCA")
+    tile_length <- 5
+    
+    # Invalid start
+    expect_error(calculate_global_score(gene_codons, tile_length, c(0, 2, 6)))
+    # Invalid end
+    expect_error(calculate_global_score(gene_codons, tile_length, c(3, 8, 12)))
+    # Not increasing
+    expect_error(calculate_global_score(gene_codons, tile_length, c(11, 8, 3)))
+    
+    # Invalid tile_length
+    expect_error(calculate_global_score(gene_codons, -1, c(1, 3, 5)))
+})
+
+
+# --- SECTION: Test Optimize Positions -----------------
+
+## Test pick_position function
+
 

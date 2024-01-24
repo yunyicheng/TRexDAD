@@ -7,11 +7,6 @@ OVERHANG_FIDELITY <- read.csv("inst/extdata/overhang_fidelity.csv")
 # Rad-27 gene for example usage
 RAD_27 <- "AATATGGGTATTAAAGGTTTGAATGCAATTATATCGGAACATGTTCCCTCTGCTATCAGGAAAAGCGATATCAAGAGCTTTTTTGGCAGAAAGGTTGCCATCGATGCCTCTATGTCTCTATATCAGTTTTTAATTGCTGTAAGACAGCAAGACGGTGGGCAGTTGACCAATGAAGCCGGTGAAACAACGTCACACTTGATGGGTATGTTTTATAGGACACTGAGAATGATTGATAACGGTATCAAGCCTTGTTATGTCTTCGACGGCAAACCTCCAGATTTGAAATCTCATGAGTTGACAAAGCGGTCTTCAAGAAGGGTGGAAACAGAAAAAAAACTGGCAGAGGCAACAACAGAATTGGAAAAGATGAAGCAAGAAAGAAGATTGGTGAAGGTTTCAAAAGAGCATAATGAAGAAGCCCAAAAATTACTAGGACTAATGGGAATCCCATATATAATAGCGCCAACGGAAGCTGAGGCTCAATGTGCTGAGTTGGCAAAGAAGGGAAAGGTGTATGCCGCAGCAAGTGAAGATATGGACACACTCTGTTATAGAACACCCTTCTTGTTGAGACATTTGACTTTTTCAGAGGCCAAGAAGGAACCGATTCACGAAATAGATACTGAATTAGTTTTGAGAGGACTCGACTTGACAATAGAGCAGTTTGTTGATCTTTGCATAATGCTTGGTTGTGACTACTGTGAAAGCATCAGAGGTGTTGGTCCAGTGACAGCCTTAAAATTGATAAAAACGCATGGATCCATCGAAAAAATCGTGGAGTTTATTGAATCTGGGGAGTCAAACAACACTAAATGGAAAATCCCAGAAGACTGGCCTTACAAACAAGCAAGAATGCTGTTTCTTGACCCTGAAGTTATAGATGGTAACGAAATAAACTTGAAATGGTCGCCACCAAAGGAGAAGGAACTTATCGAGTATTTATGTGATGATAAGAAATTCAGTGAAGAAAGAGTTAAATCTGGTATATCAAGATTGAAAAAAGGCTTGAAATCTGGCATTCAGGGTAGGTTAGATGGGTTCTTCCAAGTGGTGCCTAAGACAAAGGAACAGCTGGCTGCTGCGGCGAAAAGAGCACAAGAAAATAAAAAATTGAACAAAAATAAGAATAAAGTCACAAAGGGAAGAAGATGAGGG"
 
-# install Biostrings
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("Biostrings")
-
 
 # --- SECTION: Preprocess Data -----------------
 
@@ -242,19 +237,30 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
         stop("pos_lst must contain only positive integers.")
     } else {}
     
-    # Check if the last position in pos_lst is equal to the length of gene_codons
-    if (tail(pos_lst, 1) != length(gene_codons) - 1) {
-        stop("The last position in pos_lst must equal length(gene_codons) - 1.")
+    # Check if the last position in pos_lst is equal to the length of gene_codons - 2
+    if (tail(pos_lst, 1) != length(gene_codons) - 2) {
+        stop("The last position in pos_lst must equal length(gene_codons) - 2.")
     } else {}
     
+    # Check if pos_lst is in increasing order
+    if (!(identical(pos_lst, sort(pos_lst)))){
+        stop("pos_lst must be in increasing order.")
+    } else {}
+    
+    # Check if the pos_lst is an increasing list
+    
     all_overhangs <- list()
-    for (i in 1:(length(pos_lst) - 1)) {
+    for (i in 1:(length(pos_lst) - 2)) {
         overhangs <- get_overhangs(gene_codons, pos_lst[i], pos_lst[i + 1] - 1, TRUE)
         all_overhangs <- c(all_overhangs, overhangs$head, overhangs$tail)
     }
+    
+    last_start <- pos_lst[length(pos_lst) - 1]
+    last_end <- pos_lst[length(pos_lst)]
+    last_pair <- get_overhangs(gene_codons, pos_lst[length(pos_lst) - 1], last_end, 1)
+    all_overhangs <- c(all_overhangs, last_pair$head, last_pair$tail)
     return(all_overhangs)
 }
-
 
 #' Obtain Score for a Given Tile
 #'
@@ -394,7 +400,6 @@ calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
     
     return(global_score)
 }
-
 
 # --- SECTION: Optimize Positions -----------------
 
