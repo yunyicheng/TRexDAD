@@ -157,16 +157,17 @@ test_that("get_all_overhangs handles invalid input", {
     gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
                      "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
     
-    # Invalid because the last position is not the length of gene_codons - 1
-    expect_error(get_all_overhangs(gene_codons, c(-3, 12)), 
+    # Invalid because it contains non-positive integer
+    expect_error(get_all_overhangs(gene_codons, c(-3, 8, 11)), 
                  "pos_lst must contain only positive integers.")
     
-    # Invalid because it contains zero (non-positive integer)
-    expect_error(get_all_overhangs(gene_codons, c(3, length(gene_codons) - 1), 
+    # Invalid because the last position is not the length of gene_codons - 2
+    expect_error(get_all_overhangs(gene_codons, c(3, 8, 12), 
                                    "The last position in pos_lst must 
                                    equal length(gene_codons) - 2."))
     
-    expect_error(get_all_overhangs(gene_codons, c(11, 8, 3),
+    # Invalid because pos_lst is not increasing
+    expect_error(get_all_overhangs(gene_codons, c(11, 11, 11),
                                    "pos_lst must be in increasing order."))
 })
 
@@ -230,7 +231,7 @@ test_that("calculate_global_score calculates correct global score", {
 test_that("calculate_local_score handles invalid codons", {
     gene_codons <- c("ATG", "CAG", "XXX", "GGA", "XXY", "TCA")
     tile_length <- 5
-    expect_error(calculate_global_score(gene_codons, tile_length, c(3, 4)))
+    expect_error(calculate_global_score(gene_codons, tile_length, c(3, 8, 11)))
 })
 
 test_that("calculate_global_score handles invalid pos_lst and tile length", {

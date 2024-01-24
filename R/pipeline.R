@@ -237,13 +237,17 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
         stop("pos_lst must contain only positive integers.")
     } else {}
     
+    if (!(length(pos_lst >= 3))) {
+        stop("pos_lst must contain at least three positions.")
+    } else {}
+    
     # Check if the last position in pos_lst is equal to the length of gene_codons - 2
     if (tail(pos_lst, 1) != length(gene_codons) - 2) {
         stop("The last position in pos_lst must equal length(gene_codons) - 2.")
     } else {}
     
     # Check if pos_lst is in increasing order
-    if (!(identical(pos_lst, sort(pos_lst)))){
+    if (!(all(diff(pos_lst) > 0))){
         stop("pos_lst must be in increasing order.")
     } else {}
     
@@ -261,6 +265,12 @@ get_all_overhangs <- function(gene_codons, pos_lst) {
     all_overhangs <- c(all_overhangs, last_pair$head, last_pair$tail)
     return(all_overhangs)
 }
+
+gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                 "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+pos_lst <- c(3, 5, length(gene_codons) - 2)
+length(pos_lst)
+get_all_overhangs(gene_codons, pos_lst)
 
 #' Obtain Score for a Given Tile
 #'
@@ -338,6 +348,8 @@ calculate_local_score <- function(gene_codons, tile_length, start, end) {
 #' The score takes into account off-target reactions, repetitions, and the sum of 
 #' local scores. It utilizes a pre-defined overhang fidelity dataframe for calculations.
 #'
+#' @param gene_codons A vector of DNA codons.
+#' @param tile_length An integer representing the expected length of the tile.
 #' @param pos_lst A numeric vector representing positions in the gene sequence.
 #'
 #' @return The global score, which is a composite measure considering the off-target 
@@ -411,6 +423,8 @@ calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
 #' It uses a weighted sampling approach where the weights are inversely proportional 
 #' to the scores of the positions.
 #'
+#' @param gene_codons A vector of DNA codons.
+#' @param tile_length An integer representing the expected length of the tile.
 #' @param pos_lst A numeric vector representing positions in a gene sequence.
 #'
 #' @return A list with two elements: `index`, the index in `pos_lst` of the picked 
@@ -450,6 +464,8 @@ pick_position <- function(gene_codons, tile_length, pos_lst) {
 #' The function supports different optimization modes, 
 #' including greedy and Markov Chain Monte Carlo (MCMC) approaches.
 #'
+#' @param gene_codons A vector of DNA codons.
+#' @param tile_length An integer representing the expected length of the tile.
 #' @param pos_lst A numeric vector representing the current list of positions.
 #' @param curr_pos The current position value that needs optimization.
 #' @param left The left boundary of the scanning range for position optimization.
@@ -526,7 +542,6 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #'      Enabling one-pot Golden Gate assemblies of unprecedented 
 #'      complexity using data-optimized assembly design. 
 #'      PLOS ONE 15(9): e0238592, 2020.
-#' @import stats
 #' 
 #' @export
 execute_and_plot <- function(target_gene = RAD_27, 
