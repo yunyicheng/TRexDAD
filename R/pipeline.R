@@ -176,7 +176,7 @@ calculate_optimal_tiles <- function(num_codons) {
 #' "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
 get_overhangs <- function(gene_codons, start, end, as_dna_strings) {
     # Check if start and end positions are valid
-    if (start <= 2 || end > length(gene_codons) - 2 || end < start) {
+    if ((start <= 2) || (end >= length(gene_codons) - 1) || (end < start)) {
         stop("Invalid start or end positions.")
     } else {}
     
@@ -482,6 +482,28 @@ pick_position <- function(gene_codons, tile_length, pos_lst) {
 #' @export
 optimize_position <- function(gene_codons, tile_length, pos_lst, 
                               curr_pos, left, right, use_greedy) {
+    # Validate inputs
+    if (!is.vector(gene_codons) || any(!grepl("^[ACGT]+$", gene_codons))) {
+        stop("gene_codons must be a vector of valid DNA codons.")
+    }
+    if (!is.numeric(tile_length) || tile_length <= 0) {
+        stop("tile_length must be a positive integer.")
+    }
+    if (!is.numeric(pos_lst) || any(pos_lst <= 0)) {
+        stop("pos_lst must contain only positive integers.")
+    }
+    if (!curr_pos %in% pos_lst) {
+        stop("curr_pos must be an element in pos_lst.")
+    }
+    if (!is.numeric(left) || !is.numeric(right) || left > right || left <= 0 || right > length(gene_codons)) {
+        stop("left and right must be valid bounds within the gene_codons range.")
+    }
+    
+    # Early return if left and right are equal
+    if (left == right) {
+        return(curr_pos)
+    } else {}
+    
     score_weights <- numeric()
     indexes <- numeric()
     original_score <- calculate_global_score(gene_codons, tile_length, pos_lst)
@@ -540,6 +562,9 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #'      Enabling one-pot Golden Gate assemblies of unprecedented 
 #'      complexity using data-optimized assembly design. 
 #'      PLOS ONE 15(9): e0238592, 2020.
+#' Alberts B., Johnson A., Lewis J., et al. 
+#'      "Molecular Biology of the Cell." 6th edition. 
+#'      Garland Science, 2014.
 #' 
 #' @export
 execute_and_plot <- function(target_gene = RAD_27, 
@@ -548,6 +573,14 @@ execute_and_plot <- function(target_gene = RAD_27,
     # Split target gene into codons
     gene_codons <- split_into_codons(target_gene)
     
+    # Check if the number of codons is 60 or less (from citation 3 of function)
+    # an ORF would typically need to be at least 60-90 nucleotides long to 
+    # encode a functional protein of minimal size.
+    if (length(gene_codons) < 60) {
+        stop("Target gene produces 60 or fewer codons, which is insufficient 
+             for the optimization process.")
+    }
+    
     # Calculate optimal number of tiles
     num_codons <- length(gene_codons)
     tile_result <- (calculate_optimal_tiles(num_codons))
@@ -555,14 +588,11 @@ execute_and_plot <- function(target_gene = RAD_27,
     tile_length <- tile_result$optimal_tile_length
     
     # Initialize tile positions
-    pos <- seq(3, length(gene_codons) - 1, by = tile_length)
-    pos <- c(pos, length(gene_codons) - 1)
-    print(length(gene_codons))
-    print(pos)
+    pos <- seq(3, length(gene_codons) - 2, by = tile_length)
+    pos <- c(pos, length(gene_codons) - 2)
+    print(paste("Initial positions =", toString(pos)))
     # Obtain initial scores
     curr_score <- calculate_global_score(gene_codons, tile_length, pos)
-    
-    print(paste("Initial positions =", toString(pos)))
     print(paste("Initial score =", curr_score))
     
     # Initialization for iterations and data for plotting
@@ -600,7 +630,8 @@ execute_and_plot <- function(target_gene = RAD_27,
         y_data <- c(y_data, curr_score)
     }
     
-    plot(x_data, y_data, type = "b", col = "blue", xlab = "Iteration", ylab = "Score", main = "Score Optimization Over Iterations")
+    plot(x_data, y_data, type = "b", col = "blue", xlab = "Iteration", 
+         ylab = "Score", main = "Score Optimization Over Iterations")
     
 }
 # execute_and_plot()

@@ -256,6 +256,111 @@ test_that("calculate_global_score handles invalid pos_lst and tile length", {
 
 # --- SECTION: Test Optimize Positions -----------------
 
-## Test pick_position function
+## Test pick_position function ----
+
+test_that("pick_position selects a valid position", {
+    gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+    tile_length <- 5
+    pos_lst <- c(3, 6, 8, 11)
+    
+    # Run the function
+    picked <- pick_position(gene_codons, tile_length, pos_lst)
+    
+    # Check if the picked position is within the range of pos_lst
+    expect_true(picked$index %in% seq_along(pos_lst))
+    expect_true(picked$position %in% pos_lst)
+})
+
+test_that("pick_position handles edge cases and invalid input", {
+    gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+    tile_length <- 5
+    
+    # Test with minimal length pos_lst
+    pos_lst_minimal <- c(3, 6, 11)
+    expect_silent(pick_position(gene_codons, tile_length, pos_lst_minimal))
+    
+    # Test with invalid pos_lst (too short)
+    pos_lst_short <- c(1)  # Too short for the function to work
+    expect_error(pick_position(gene_codons, tile_length, pos_lst_short))
+    
+})
+
+# Test optimize_position function ----
+
+test_that("optimize_position returns a value within specified range", {
+    gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+    tile_length <- 5
+    pos_lst <- c(3, 6, 11)
+    curr_pos <- pos_lst[2]
+    left <- 7
+    right <- 10
+    
+    optimized_pos_greedy <- optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, TRUE)
+    optimized_pos_mcmc <- optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, FALSE)
+    
+    # Check if the optimized positions are within the range
+    expect_true(optimized_pos_greedy %in% left:right)
+    expect_true(optimized_pos_mcmc %in% left:right)
+})
+
+test_that("optimize_position handles edge cases", {
+    gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+    tile_length <- 5
+    pos_lst <- c(3, 6, 11)
+    curr_pos <- pos_lst[2]
+    left <- 6  # Left boundary same as current position
+    right <- 6  # Right boundary same as current position
+    
+    # Test should pass without throwing an error and return the same position
+    expect_equal(optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, TRUE), curr_pos)
+    expect_equal(optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, FALSE), curr_pos)
+})
 
 
+# Test execute_and_plot function ----
+
+# Helper function to randomly generate testing examples
+generate_random_dna_sequence <- function(num_codons) {
+    if (num_codons <= 1) {
+        stop("Number of codons must be greater than 1 to include 'ATG' as the second codon.")
+    }
+    
+    # Generate the first codon randomly
+    first_codon <- paste(sample(c("A", "T", "G", "C"), size = 3, replace = TRUE), collapse = "")
+    
+    # Generate the rest of the sequence randomly, excluding the first and second codon
+    remaining_sequence <- paste(sample(c("A", "T", "G", "C"), size = (num_codons - 2) * 3, replace = TRUE), 
+                                collapse = "")
+    
+    # Concatenate the first codon, 'ATG', and the remaining sequence
+    full_sequence <- paste(first_codon, "ATG", remaining_sequence, sep = "")
+    
+    return(full_sequence)
+}
+
+test_that("execute_and_plot completes without error", {
+    # Generate a random gene sequence with a length of at least 60 codons
+    test_gene_1 <- generate_random_dna_sequence(num_codons = 60)
+    test_gene_2 <- generate_random_dna_sequence(num_codons = 60)
+    test_gene_3 <- generate_random_dna_sequence(num_codons = 60)
+    max_iter <- 5  # Reduced number for test efficiency
+    scan_rate <- 2
+    
+    expect_no_error(execute_and_plot(test_gene_1, max_iter, scan_rate))
+    expect_no_error(execute_and_plot(test_gene_2, max_iter, scan_rate))
+    expect_no_error(execute_and_plot(test_gene_3, max_iter, scan_rate))
+})
+
+test_that("execute_and_plot handles invalid input", {
+    # Generate an invalid gene sequence
+    invalid_gene <- paste(generate_random_dna_sequence(num_codons = 60), 
+                          "XXX", sep = "")
+    max_iter <- 5
+    scan_rate <- 2
+    
+    expect_error(execute_and_plot(invalid_gene, max_iter, scan_rate))
+})
