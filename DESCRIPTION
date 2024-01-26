@@ -17,7 +17,6 @@ Imports:
     forstringr,
     ggplot2,
     shiny,
-    shinythemes,
     scales
 Depends: 
     R (>= 3.5.0)

@@ -13,14 +13,14 @@ test_that("split_into_codons returns correct codons for valid input", {
 
 test_that("split_into_codons throws an error for invalid nucleotides", {
     invalid_seq <- "GCTXATG"
-    expect_error(split_into_codons(invalid_seq), "Invalid gene sequence: 
-                 sequence should only contain A, C, G, and T.")
+    expect_error(split_into_codons(invalid_seq), 
+        "Invalid gene sequence: sequence should only contain A, C, G, and T.")
 })
 
 test_that("split_into_codons throws an error for sequences not multiple of 3", {
     invalid_length_seq <- "CGGATGA"
-    expect_error(split_into_codons(invalid_length_seq), "Invalid gene 
-                 sequence length: length should be a multiple of 3.")
+    expect_error(split_into_codons(invalid_length_seq), 
+            "Invalid gene sequence length: length should be a multiple of 3.")
 })
 
 test_that("split_into_codons throws an error if 'ATG' is not the second codon", {

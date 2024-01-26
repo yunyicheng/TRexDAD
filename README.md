@@ -69,10 +69,11 @@ devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
 library("TRexDAD")
 ```
 
-<!-- To run the Shiny app: -->
-<!-- ``` r -->
-<!-- runTestingPackage() # not for Assessment 4; only for Assessment 5 -->
-<!-- ``` -->
+To run the Shiny app:
+
+``` r
+TRexDAD::run_TRexDAD()
+```
 
 ## Package Overview
 
@@ -81,9 +82,11 @@ ls("package:TRexDAD")
 browseVignettes("TRexDAD")
 ```
 
-`TRexDAD` contains 10 functions. Since they are all parts of an
-integrated pipeline, they are go to one R script, `pipeline.R`. Here are
-the workflow illustration and detailed explanation of them.
+`TRexDAD` contains 11 functions. Since 10 of them are parts of an
+integrated pipeline, they are go to one R script, `pipeline.R`. The
+function `run_TRexDAD` is a runner for shiny App, so it goes into
+`run_TRexDAD.R`. Here are the workflow illustration and detailed
+explanation of the functions in `pipeline.R`.
 
 <figure>
 <img src="inst/extdata/pipeline_workflow.png" alt="Pipeline Workflow" />
@@ -250,8 +253,6 @@ To initiate workflow with the default gene of interest, run:
 ``` r
 execute_and_plot()
 ```
-
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
 For comprehensive explanation of workflow, please see the tool’s
 vignettes.

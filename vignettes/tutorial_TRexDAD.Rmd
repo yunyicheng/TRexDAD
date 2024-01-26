@@ -53,9 +53,11 @@ To list all user-accessible functions, run:
 ls("package:TRexDAD")
 ```
 
-`TRexDAD` contains 10 functions. Since they are all parts of an integrated 
-pipeline, they are go to one R script, `pipeline.R`. Here are the workflow 
-illustration and detailed explanation of them.
+`TRexDAD` contains 11 functions. Since 10 of them are parts of an integrated 
+pipeline, they are go to one R script, `pipeline.R`. The function `run_TRexDAD`
+is a runner for shiny App, so it goes into `run_TRexDAD.R`.
+Here are the workflow illustration and detailed explanation of the functions in
+`pipeline.R`.
 
 ![Pipeline Workflow](../inst/extdata/pipeline_workflow.png)
 

@@ -662,9 +662,12 @@ execute_and_plot <- function(target_gene = RAD_27,
     }
     
     # Create a ggplot  with the collected data
-    df <- data.frame(Iteration = x_data, Score = y_data)
+    iteration <- x_data
+    score <- y_data
     
-    plot <- ggplot2::ggplot(df, ggplot2::aes(x = Iteration, y = Score)) +
+    df <- data.frame(iteration, score)
+    
+    plot <- ggplot2::ggplot(df, ggplot2::aes(x = iteration, y = score)) +
         ggplot2::geom_line(color = "blue") +
         ggplot2::geom_point(color = "blue") +
         ggplot2::labs(

@@ -67,7 +67,7 @@ developed using `R version 4.3.1 (2023-06-16)`,
 
 To install the latest version of the package:
 
-```{r results='hide', message=FALSE, warning=FALSE}
+```r
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 install.packages("devtools")
 library("devtools")
@@ -77,20 +77,22 @@ library("TRexDAD")
 
 To run the Shiny app:
 
-``` {r results='hide', message=FALSE, warning=FALSE}
+``` r
 TRexDAD::run_TRexDAD()
 ```
 
 ## Package Overview
 
-```{r results='hide', message=FALSE, warning=FALSE}
+```r
 ls("package:TRexDAD")
 browseVignettes("TRexDAD")
 ```
 
-`TRexDAD` contains 10 functions. Since they are all parts of an integrated 
-pipeline, they are go to one R script, `pipeline.R`. Here are the workflow 
-illustration and detailed explanation of them.
+`TRexDAD` contains 11 functions. Since 10 of them are parts of an integrated 
+pipeline, they are go to one R script, `pipeline.R`. The function `run_TRexDAD`
+is a runner for shiny App, so it goes into `run_TRexDAD.R`.
+Here are the workflow illustration and detailed explanation of the functions in
+`pipeline.R`.
 
 ![Pipeline Workflow](inst/extdata/pipeline_workflow.png)
 
@@ -242,7 +244,7 @@ Rad27 by default; but users are encouraged to use this tool for any genes of
 interest with an ORF which is at least 60 condons in length.
 
 To initiate workflow with the default gene of interest, run:
-```{r results='hide', message=FALSE, warning=FALSE} 
+```r 
 execute_and_plot()
 ```
 
