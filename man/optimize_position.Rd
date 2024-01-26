@@ -15,6 +15,10 @@ optimize_position(
 )
 }
 \arguments{
+\item{gene_codons}{A vector of DNA codons.}
+
+\item{tile_length}{An integer representing the expected length of the tile.}
+
 \item{pos_lst}{A numeric vector representing the current list of positions.}
 
 \item{curr_pos}{The current position value that needs optimization.}
@@ -26,8 +30,9 @@ optimize_position(
 \item{use_greedy}{The optimization mode: TRUE for greedy, FALSE for MCMC.}
 }
 \value{
-The optimized position value within the specified range. If the function
-does not find a better position, it returns the original position value.
+The optimized position value within the specified range.
+If the function does not find a better position,
+it returns the original position value.
 }
 \description{
 This function optimizes a single position within a list of positions.
@@ -37,9 +42,17 @@ The function supports different optimization modes,
 including greedy and Markov Chain Monte Carlo (MCMC) approaches.
 }
 \examples{
-# Example usage assuming pos_lst and calculate_scores function are defined
-pos_lst <- c(1, 5, 10, 15)
-optimized_pos <- optimize_position(pos_lst, pos_lst[2], 3, 7, 1)
-print(optimized_pos)
-
+gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+"ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+tile_length <- 5
+pos_lst <- c(3, 6, 11)
+curr_pos <- pos_lst[2]
+left <- 7
+right <- 10
+optimize_position(gene_codons, tile_length, pos_lst, curr_pos, 
+                    left, right, TRUE)
+}
+\references{
+Hastings, W. K. Monte Carlo sampling methods using Markov chains
+and their applications (1970). Biometrika 57, 97–109.
 }

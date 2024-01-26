@@ -31,3 +31,8 @@ either \code{DNAString} objects or plain character strings.
 get_overhangs(c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
 "ATT", "TGA", "TAG", "GAA", "TAT", "AGC"), 3, 4, TRUE)
 }
+\references{
+Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of
+unprecedented complexity using data-optimized assembly design. PLOS ONE 15,
+e0238592 (2020).
+}

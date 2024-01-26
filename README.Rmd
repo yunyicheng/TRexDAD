@@ -84,24 +84,33 @@ the number of tiles and the number of codons.
 
 9. ***pick_position*** selects a position from a list of positions for optimization based on their scores. It uses a weighted sampling approach where the weights are inversely proportional to the scores of the positions.
 
-10. ***optimize_position*** optimizes a single position within a list of positions. It adjusts the specified position to maximize the overall score (obtained via `calculate_scores`). The function supports different optimization modes, including greedy and Markov Chain Monte Carlo (MCMC) approaches.
+10. ***optimize_position*** optimizes a single position within a list of 
+positions. It adjusts the specified position to maximize the overall score 
+(obtained via `calculate_scores`). The function supports different 
+optimization modes, including greedy and 
+Markov Chain Monte Carlo (MCMC) approaches.
 
 
 ## Contributions
 
 The author of the package is Yunyi Cheng. 
 
-The author wrote the *execute_and_plot* function, which performs an optimization process to determine the optimal tile positions in a gene sequence and plots the change in the score over iterations. 
+The author wrote the *execute_and_plot* function, which performs an optimization process to determine the optimal tile positions in a gene sequence and plots the 
+change in the score over iterations. 
 
-Other user-accessible functions are also developed by the author. Most of them serve as helper functions for the *execute_and_plot* function, but they can also be used indepently for specific tasks.
+Other user-accessible functions are also developed by the author. Most of them 
+serve as helper functions for the *execute_and_plot* function, but they can 
+also be used indepently for specific tasks.
 
 `Biostrings` R package is used for calculating reverse complement of overhangs in the *get_overhangs* function.
 
 `readxl` R package is used for reading excel file `overhang_fidelity.xlsx` containing tested overhangs's reactivity against each other. `overhang_fidelity.xlsx` is from the study by New England Biolabs [(Pryor et al., 2020)](https://doi.org/10.1371/journal.pone.0238592).
 
-`forstringr` R package is used for manipulating splitted target gene (a list of codons) in the *get_overhangs* function.
+`forstringr` R package is used for manipulating splitted target gene 
+(a list of codons) in the *get_overhangs* function.
 
-The `stats` R package is used for optimizing gene tile length and number of tiles. It is used in  *calculate_optimal_tiles* function and *execute_and_plot* function. 
+The `utils` R package (included in R) is used for producing combinations
+of overhangs. It is used in  *calculate_global_score* function. 
 
 
 ## References
@@ -112,6 +121,10 @@ The `stats` R package is used for optimizing gene tile length and number of tile
 
 - Eremin, I. I. et al. 2Approximation algorithm for finding a clique with minimum weight of vertices and edges (2014). *Proc. Steklov Inst. Math.*, **284**, 87–95. [DOI:10.1134/S0081543814040101](https://doi.org/10.1134/S0081543814040101)
 
+- Hastings, W. K. Monte Carlo sampling methods using Markov chains and their applications (1970). *Biometrika 57*, 97–109.
+
+- Alberts B., Johnson A., Lewis J., et al. Molecular Biology of the Cell (2014). 
+*Garland Science*. **6th edition**.
 
 - Pagès H, Aboyoun P, Gentleman R, DebRoy S (2023). Biostrings: Efficient manipulation of biological strings. Bioconductor. [doi:10.18129/B9.bioc.Biostrings](https://doi.org/10.18129/B9.bioc.Biostrings), R package version 2.68.1, [Biostrings](https://bioconductor.org/packages/Biostrings).
 
@@ -128,7 +141,8 @@ This package was developed as part of an assessment for 2023 BCB410H: Applied Bi
 `TRexDAD` welcomes issues, enhancement requests, and other contributions. To submit an issue, use the [GitHub issues](https://github.com/yunyicheng/TRexDAD/issues). Many thanks to those who provided feedback to improve this package.
 
 ## Example Workflow Usage
-The main objective of the package is to find the optimal assembly design for mutagenizing a gene of interest. For illustration purposes, it is set to Rad27 by default; but users are encouraged to use this tool for any genes of interest.
+The main objective of the package is to find the optimal assembly design for mutagenizing a gene of interest. For illustration purposes, it is set to Rad27 by default; but users are encouraged to use this tool for any genes of interest
+with an ORF which is at least 60 condons in length.
 
 To initiate workflow with the default gene of interest, run:
 ```{r results='hide', message=FALSE, warning=FALSE} 

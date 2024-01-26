@@ -7,13 +7,18 @@
 calculate_local_score(gene_codons, tile_length, start, end)
 }
 \arguments{
+\item{gene_codons}{A vector of DNA codons.}
+
+\item{tile_length}{An integer representing the expected length of the tile.}
+
 \item{start}{An integer representing the start position of the tile in the gene sequence.}
 
 \item{end}{An integer representing the end position of the tile in the gene sequence.}
 }
 \value{
-The calculated score for the specified tile, which takes into account
-the palindromicity, length variation, and on-target reactivity.
+An integer representing the calculated score for the specified tile.
+The score takes into account the palindromicity, length variation,
+and on-target reactivity of the tile's overhang sequences.
 }
 \description{
 This function calculates a score for a specific tile within a gene sequence.
@@ -21,8 +26,15 @@ The score is based on palindromicity, length variation from a global standard,
 and on-target reactivity, using a pre-defined overhang fidelity dataframe.
 }
 \examples{
-# Assuming predefined variables and setup:
-# start = 1, end = 3, overhang_fidelity (dataframe), tile_length_global (value)
-obtain_score(1, 3)
-
+# Example usage with predefined variables and setup:
+gene_codons <- c("ATG", "CAG", "TAC", "GGA", "TGA", "TCA")
+tile_length <- 4
+start <- 3
+end <- 4
+calculate_local_score(gene_codons, tile_length, start, end)
+}
+\references{
+Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of
+unprecedented complexity using data-optimized assembly design. PLOS ONE 15,
+e0238592 (2020).
 }

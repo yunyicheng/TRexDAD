@@ -2,7 +2,7 @@
 
 
 # Read overhang fidelity chart
-OVERHANG_FIDELITY <- read.csv("inst/extdata/overhang_fidelity.csv")
+OVERHANG_FIDELITY <- utils::read.csv("inst/extdata/overhang_fidelity.csv")
 
 # Rad-27 gene for example usage
 RAD_27 <- "AATATGGGTATTAAAGGTTTGAATGCAATTATATCGGAACATGTTCCCTCTGCTATCAGGAAAAGCGATATCAAGAGCTTTTTTGGCAGAAAGGTTGCCATCGATGCCTCTATGTCTCTATATCAGTTTTTAATTGCTGTAAGACAGCAAGACGGTGGGCAGTTGACCAATGAAGCCGGTGAAACAACGTCACACTTGATGGGTATGTTTTATAGGACACTGAGAATGATTGATAACGGTATCAAGCCTTGTTATGTCTTCGACGGCAAACCTCCAGATTTGAAATCTCATGAGTTGACAAAGCGGTCTTCAAGAAGGGTGGAAACAGAAAAAAAACTGGCAGAGGCAACAACAGAATTGGAAAAGATGAAGCAAGAAAGAAGATTGGTGAAGGTTTCAAAAGAGCATAATGAAGAAGCCCAAAAATTACTAGGACTAATGGGAATCCCATATATAATAGCGCCAACGGAAGCTGAGGCTCAATGTGCTGAGTTGGCAAAGAAGGGAAAGGTGTATGCCGCAGCAAGTGAAGATATGGACACACTCTGTTATAGAACACCCTTCTTGTTGAGACATTTGACTTTTTCAGAGGCCAAGAAGGAACCGATTCACGAAATAGATACTGAATTAGTTTTGAGAGGACTCGACTTGACAATAGAGCAGTTTGTTGATCTTTGCATAATGCTTGGTTGTGACTACTGTGAAAGCATCAGAGGTGTTGGTCCAGTGACAGCCTTAAAATTGATAAAAACGCATGGATCCATCGAAAAAATCGTGGAGTTTATTGAATCTGGGGAGTCAAACAACACTAAATGGAAAATCCCAGAAGACTGGCCTTACAAACAAGCAAGAATGCTGTTTCTTGACCCTGAAGTTATAGATGGTAACGAAATAAACTTGAAATGGTCGCCACCAAAGGAGAAGGAACTTATCGAGTATTTATGTGATGATAAGAAATTCAGTGAAGAAAGAGTTAAATCTGGTATATCAAGATTGAAAAAAGGCTTGAAATCTGGCATTCAGGGTAGGTTAGATGGGTTCTTCCAAGTGGTGCCTAAGACAAAGGAACAGCTGGCTGCTGCGGCGAAAAGAGCACAAGAAAATAAAAAATTGAACAAAAATAAGAATAAAGTCACAAAGGGAAGAAGATGAGGG"
@@ -229,8 +229,8 @@ get_overhangs <- function(gene_codons, start, end, as_dna_strings) {
 #' 
 #' @examples
 #' gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
-#'                  "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
-#' pos_lst <- c(3, 5, length(gene_codons) - 1)
+#'                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+#' pos_lst <- c(3, 5, length(gene_codons) - 2)
 #' get_all_overhangs(gene_codons, pos_lst)
 get_all_overhangs <- function(gene_codons, pos_lst) {
     if (any(pos_lst <= 0)) {
@@ -362,6 +362,12 @@ calculate_local_score <- function(gene_codons, tile_length, start, end) {
 #' unprecedented complexity using data-optimized assembly design. PLOS ONE 15, 
 #' e0238592 (2020).
 #' 
+#' @examples
+#' gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+#'                     "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+#' tile_length <- 5
+#' pos_lst <- c(3, 6, 8, 11)
+#' calculate_global_score(gene_codons, tile_length, pos_lst)
 calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
     overhang_fidelity_df <- as.data.frame(OVERHANG_FIDELITY)
     # Set the first column as row names
@@ -428,13 +434,14 @@ calculate_global_score <- function(gene_codons, tile_length, pos_lst) {
 #' @return A list with two elements: `index`, the index in `pos_lst` of the picked 
 #'         position (shifted by 1), and `position`, the actual value of the picked position.
 #'
-#' @examples
-#' # Example usage assuming pos_lst and obtain_score function are defined
-#' pos_lst <- c(1, 5, 10, 15)
-#' picked <- pick_position(pos_lst)
-#' print(picked)
-#'
 #' @export
+#' 
+#' @examples
+#' gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+#'                   "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+#' tile_length <- 5
+#' pos_lst <- c(3, 6, 8, 11)
+#' pick_position(gene_codons, tile_length, pos_lst)
 pick_position <- function(gene_codons, tile_length, pos_lst) {
     score_weights <- numeric(length(pos_lst) - 2)
     indexes <- numeric(length(pos_lst) - 2)
@@ -470,16 +477,24 @@ pick_position <- function(gene_codons, tile_length, pos_lst) {
 #' @param right The right boundary of the scanning range for position optimization.
 #' @param use_greedy The optimization mode: TRUE for greedy, FALSE for MCMC.
 #'
-#' @return The optimized position value within the specified range. If the function
-#'         does not find a better position, it returns the original position value.
-#'
+#' @return The optimized position value within the specified range. 
+#'         If the function does not find a better position, 
+#'         it returns the original position value.
+#' @export 
+#'      
+#' @references Hastings, W. K. Monte Carlo sampling methods using Markov chains
+#'             and their applications (1970). Biometrika 57, 97–109.
+#'             
 #' @examples
-#' # Example usage assuming pos_lst and calculate_scores function are defined
-#' pos_lst <- c(1, 5, 10, 15)
-#' optimized_pos <- optimize_position(pos_lst, pos_lst[2], 3, 7, 1)
-#' print(optimized_pos)
-#'
-#' @export
+#' gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+#' "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+#' tile_length <- 5
+#' pos_lst <- c(3, 6, 11)
+#' curr_pos <- pos_lst[2]
+#' left <- 7
+#' right <- 10
+#' optimize_position(gene_codons, tile_length, pos_lst, curr_pos, 
+#'                     left, right, TRUE)
 optimize_position <- function(gene_codons, tile_length, pos_lst, 
                               curr_pos, left, right, use_greedy) {
     # Validate inputs
@@ -541,15 +556,22 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #' Execute the Optimization Process and Plot Results
 #'
 #' This function performs an optimization process to determine the optimal tile
-#' positions in a gene sequence and plots the progression of the score over iterations.
-#' It reads the overhang fidelity data, computes the optimal number of tiles, and iteratively
-#' improves the positions, plotting the change in score with respect to number of iterations at the end.
-#'
-#' @param max_iter The maximum number of iterations for the optimization process (default: 30).
-#' @param scan_rate The range within which to scan for optimizing tile positions (default: 7).
+#' positions in a gene sequence and plots the progression of the score 
+#' over iterations. It reads the overhang fidelity data, computes the optimal 
+#' number of tiles, and iteratively improves the positions, plotting the change 
+#' in score with respect to number of iterations at the end.
+#' 
+#' @param target_gene The target gene for assembly (default: Rad27), 
+#'                    must contain one codon before and after ORF. 
+#' @param max_iter The maximum number of iterations for the optimization process
+#'                 (default: 30).
+#' @param scan_rate The range within which to scan for optimizing tile positions 
+#'                 (default: 7).
 #'
 #' @return This function does not return a value; it generates a plot showing 
 #' the score optimization over iterations.
+#' 
+#' @export
 #' 
 #' @references 
 #' Vladimir Potapov, Jennifer L. Ong, Rebecca B. Kucera, Bradley W. Langhorst, 
@@ -566,7 +588,8 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #'      "Molecular Biology of the Cell." 6th edition. 
 #'      Garland Science, 2014.
 #' 
-#' @export
+#' @examples
+#' execute_and_plot(max_iter = 5, scan_rate = 2)
 execute_and_plot <- function(target_gene = RAD_27, 
                              max_iter = 30, scan_rate = 7) {
     

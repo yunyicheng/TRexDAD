@@ -5,15 +5,15 @@ Author: Yunyi Cheng
 Maintainer: Yunyi Cheng <yunyi.cheng@outlook.com>
 Description: 
     A pipeline for the design of mutagenizing oligonucleotides required
-    for Tile Region Exchange Mutagenesis (T-Rex), which is a crucial step for deep 
-    mutation scanning (DMS), by harnessing data-optimized assembly design (DAD).
-License: MIT
+    for Tile Region Exchange Mutagenesis (T-Rex), which is a crucial step for 
+    deep mutation scanning (DMS), 
+    by harnessing data-optimized assembly design (DAD).
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports: 
     Biostrings,
-    readxl,
     forstringr
 Depends: 
     R (>= 3.5.0)

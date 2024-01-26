@@ -22,3 +22,14 @@ in a gene sequence. It iteratively calls the \code{get_overhangs} function to
 calculate the head and tail overhangs for each position and accumulates
 them in a list.
 }
+\examples{
+gene_codons <- c("GAG", "CTG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                    "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+pos_lst <- c(3, 5, length(gene_codons) - 2)
+get_all_overhangs(gene_codons, pos_lst)
+}
+\references{
+Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of
+unprecedented complexity using data-optimized assembly design. PLOS ONE 15,
+e0238592 (2020).
+}

@@ -7,6 +7,10 @@
 pick_position(gene_codons, tile_length, pos_lst)
 }
 \arguments{
+\item{gene_codons}{A vector of DNA codons.}
+
+\item{tile_length}{An integer representing the expected length of the tile.}
+
 \item{pos_lst}{A numeric vector representing positions in a gene sequence.}
 }
 \value{
@@ -20,9 +24,9 @@ It uses a weighted sampling approach where the weights are inversely proportiona
 to the scores of the positions.
 }
 \examples{
-# Example usage assuming pos_lst and obtain_score function are defined
-pos_lst <- c(1, 5, 10, 15)
-picked <- pick_position(pos_lst)
-print(picked)
-
+gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                  "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+tile_length <- 5
+pos_lst <- c(3, 6, 8, 11)
+pick_position(gene_codons, tile_length, pos_lst)
 }

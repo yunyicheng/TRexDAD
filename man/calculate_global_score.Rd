@@ -7,6 +7,10 @@
 calculate_global_score(gene_codons, tile_length, pos_lst)
 }
 \arguments{
+\item{gene_codons}{A vector of DNA codons.}
+
+\item{tile_length}{An integer representing the expected length of the tile.}
+
 \item{pos_lst}{A numeric vector representing positions in the gene sequence.}
 }
 \value{
@@ -17,4 +21,16 @@ reactions, repetitions in overhangs, and the sum of local scores for each positi
 This function calculates a global score for a list of positions in a gene sequence.
 The score takes into account off-target reactions, repetitions, and the sum of
 local scores. It utilizes a pre-defined overhang fidelity dataframe for calculations.
+}
+\examples{
+gene_codons <- c("GAG", "ATG", "TGT", "AGG", "TGC", "CGG", "CCA", 
+                    "ATT", "TGA", "TAG", "GAA", "TGA", "AGC")
+tile_length <- 5
+pos_lst <- c(3, 6, 8, 11)
+calculate_global_score(gene_codons, tile_length, pos_lst)
+}
+\references{
+Pryor, J. M. et al. Enabling one-pot Golden Gate assemblies of
+unprecedented complexity using data-optimized assembly design. PLOS ONE 15,
+e0238592 (2020).
 }
