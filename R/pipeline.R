@@ -571,7 +571,7 @@ optimize_position <- function(gene_codons, tile_length, pos_lst,
 #' @return This function does not return a value; it generates a plot showing 
 #' the score optimization over iterations.
 #' 
-#' @import ggplot2
+#' @import ggplot2 scales
 #' @export
 #' 
 #' @references 
@@ -660,16 +660,21 @@ execute_and_plot <- function(target_gene = RAD_27,
     plot <- ggplot2::ggplot(df, ggplot2::aes(x = Iteration, y = Score)) +
         ggplot2::geom_line(color = "blue") +
         ggplot2::geom_point(color = "blue") +
-        ggplot2::labs(x = "Iteration", y = "Score",
-             title = "Score Optimization Over Iterations") +
-        ggplot2::theme_minimal()
-    
-    plot <- plot + 
-        ggplot2::scale_y_continuous(
-            labels = scales::label_number(big.mark = ","))
+        ggplot2::labs(
+            x = "Iteration", 
+            y = "Score",
+            title = "Score Optimization Over Iterations"
+        ) +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(
+            plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+            axis.title = element_text(size = 12),
+            axis.text = element_text(size = 10)
+        ) +
+        scale_y_continuous(labels = scales::label_number(big.mark = ","))
     
     # Return the ggplot object
     return(list(plot = plot,
                 final_position = pos))
 }
-execute_and_plot(max_iter = 3)
+# execute_and_plot(max_iter = 3)
