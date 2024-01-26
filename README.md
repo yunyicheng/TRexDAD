@@ -261,48 +261,16 @@ vignettes.
 
 The package tree structure is provided below:
 
-``` r
-.
-|____man
-| |____execute_and_plot.Rd
-| |____obtain_score.Rd
-| |____get_all_overhangs.Rd
-| |____pick_position.Rd
-| |____oligo_cost.Rd
-| |____optimize_position.Rd
-| |____calculate_optimal_tiles.Rd
-| |____calculate_scores.Rd
-| |____figures
-| | |____README-unnamed-chunk-4-1.png
-| |____get_overhangs.Rd
-| |____split_into_codons.Rd
-|____.Rbuildignore
-|____vignettes
-| |____vignette.R
-| |____vignette.html
-| |____.gitignore
-| |____vignette.Rmd
-|____.DS_Store
-|____LICENSE
-|____tests
-| |____.DS_Store
-| |____testthat
-| | |____test-processdata.R
-| |____testthat.R
-|____R
-| |____execution_plot.R
-| |____optimize_position.R
-| |____calculate_scores.R
-| |____process_data.R
-|____NAMESPACE
-|____README.md
-|____DESCRIPTION
-|____.gitignore
-|____TRexDAD.Rproj
-|____inst
-| |____.DS_Store
-| |____extdata
-| | |____overhang_fidelity.xlsx
-|____README.Rmd
-|____.Rproj.user
-```
+📦TRexDAD ┣ 📂R ┃ ┣ 📜pipeline.R ┃ ┗ 📜run_TRexDAD.R ┣ 📂inst ┃ ┣
+📂extdata ┃ ┃ ┣ 📜TRex_overview.png ┃ ┃ ┣ 📜overhang_fidelity.csv ┃ ┃ ┗
+📜pipeline_workflow.png ┃ ┣ 📂shiny_script ┃ ┃ ┗ 📜app.R ┃ ┗ 📜CITATION
+┣ 📂man ┃ ┣ 📂figures ┃ ┃ ┗ 📜README-unnamed-chunk-4-1.png ┃ ┣
+📜calculate_global_score.Rd ┃ ┣ 📜calculate_local_score.Rd ┃ ┣
+📜calculate_optimal_tiles.Rd ┃ ┣ 📜execute_and_plot.Rd ┃ ┣
+📜get_all_overhangs.Rd ┃ ┣ 📜get_overhangs.Rd ┃ ┣ 📜oligo_cost.Rd ┃ ┣
+📜optimize_position.Rd ┃ ┣ 📜pick_position.Rd ┃ ┣ 📜run_TRexDAD.Rd ┃ ┗
+📜split_into_codons.Rd ┣ 📂tests ┃ ┣ 📂testthat ┃ ┃ ┗ 📜test_pipeline.R
+┃ ┗ 📜testthat.R ┣ 📂vignettes ┃ ┣ 📜.gitignore ┃ ┣ 📜tutorial_TRexDAD.R
+┃ ┣ 📜tutorial_TRexDAD.Rmd ┃ ┗ 📜tutorial_TRexDAD.html ┣ 📜.RData ┣
+📜.Rbuildignore ┣ 📜.Rhistory ┣ 📜.gitignore ┣ 📜DESCRIPTION ┣ 📜LICENSE
+┣ 📜NAMESPACE ┣ 📜README.Rmd ┣ 📜README.md ┗ 📜TRexDAD.Rproj
