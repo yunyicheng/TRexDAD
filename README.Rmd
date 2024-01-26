@@ -87,7 +87,7 @@ browseVignettes("TRexDAD")
 
 `TRexDAD` contains 10 functions. Since they are all parts of an integrated 
 pipeline, they are go to one R script, `pipeline.R`. Here are the workflow 
-illustration and detailed explaination of them.
+illustration and detailed explanation of them.
 
 ![Pipeline Workflow](inst/extdata/pipeline_workflow.png)
 
@@ -120,7 +120,7 @@ accumulates them in a list.
 7. ***calculate_local_score*** calculates a score for a specific tile 
 within a gene sequence. The score is based on palindromicity, length 
 variation from a global standard, and on-target reactivity, using a 
-pre-defined overhang fidelity dataframe.
+pre-defined overhang fidelity data frame.
 
 8. ***calculate_global_score*** calculates a global score for a list of 
 positions in a gene sequence. The score takes into account off-target 
