@@ -6,23 +6,27 @@ library(testthat)
 
 test_that("split_into_codons returns correct codons for valid input", {
     gene_seq <- "GCTATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAGATC"
-    expected_codons <- c("GCT", "ATG", "GCC", "ATT", "GTA", "ATG", "GGC", "CGC", "TGA", "AAG", "GGT", "GCC", "CGA", "TAG", "ATC")
+    expected_codons <- c("GCT", "ATG", "GCC", "ATT", "GTA", "ATG", "GGC", 
+                         "CGC", "TGA", "AAG", "GGT", "GCC", "CGA", "TAG", "ATC")
     expect_equal(split_into_codons(gene_seq), expected_codons)
 })
 
 test_that("split_into_codons throws an error for invalid nucleotides", {
     invalid_seq <- "GCTXATG"
-    expect_error(split_into_codons(invalid_seq), "Invalid gene sequence: sequence should only contain A, C, G, and T.")
+    expect_error(split_into_codons(invalid_seq), "Invalid gene sequence: 
+                 sequence should only contain A, C, G, and T.")
 })
 
 test_that("split_into_codons throws an error for sequences not multiple of 3", {
     invalid_length_seq <- "CGGATGA"
-    expect_error(split_into_codons(invalid_length_seq), "Invalid gene sequence length: length should be a multiple of 3.")
+    expect_error(split_into_codons(invalid_length_seq), "Invalid gene 
+                 sequence length: length should be a multiple of 3.")
 })
 
 test_that("split_into_codons throws an error if 'ATG' is not the second codon", {
     invalid_atg_seq <- "GCAGCCATG"
-    expect_error(split_into_codons(invalid_atg_seq), "Invalid sequence: 'ATG' is not the second codon.")
+    expect_error(split_into_codons(invalid_atg_seq), 
+                 "Invalid sequence: 'ATG' is not the second codon.")
 })
 
 
@@ -38,13 +42,17 @@ test_that("oligo_cost handles edge cases", {
 })
 
 test_that("oligo_cost throws an error for zero or negative tiles", {
-    expect_error(oligo_cost(0, 100), "The number of tiles should be a positive integer.")
-    expect_error(oligo_cost(-1, 100), "The number of tiles should be a positive integer.")
+    expect_error(oligo_cost(0, 100), 
+                 "The number of tiles should be a positive integer.")
+    expect_error(oligo_cost(-1, 100), 
+                 "The number of tiles should be a positive integer.")
 })
 
 test_that("oligo_cost throws an error for zero or negative codons", {
-    expect_error(oligo_cost(10, 0), "The number of codons should be a positive integer.")
-    expect_error(oligo_cost(10, -5), "The number of codons should be a positive integer.")
+    expect_error(oligo_cost(10, 0), 
+                 "The number of codons should be a positive integer.")
+    expect_error(oligo_cost(10, -5), 
+                 "The number of codons should be a positive integer.")
 })
 
 
@@ -55,7 +63,9 @@ test_that("calculate_optimal_tiles returns correct structure", {
     
     # Check if it's a list and has the correct elements
     expect_type(result, "list")
-    expect_true(all(c("optimal_num_tiles", "optimal_tile_length", "optimal_cost") %in% names(result)))
+    expect_true(all(
+        c("optimal_num_tiles", "optimal_tile_length", "optimal_cost")
+        %in% names(result)))
 })
 
 test_that("calculate_optimal_tiles returns valid values", {
@@ -73,10 +83,12 @@ test_that("calculate_optimal_tiles returns valid values", {
 
 test_that("calculate_optimal_tiles handles invalid input", {
     # Example with zero codons
-    expect_error(calculate_optimal_tiles(0), "The number of codons should be a positive integer.")
+    expect_error(calculate_optimal_tiles(0), 
+                 "The number of codons should be a positive integer.")
     
     # Example with negative codons
-    expect_error(calculate_optimal_tiles(-100), "The number of codons should be a positive integer.")
+    expect_error(calculate_optimal_tiles(-100),
+                 "The number of codons should be a positive integer.")
 })
 
 
@@ -90,8 +102,8 @@ test_that("get_overhangs calculates correct sequences", {
     result <- get_overhangs(gene_codons, 3, 4, FALSE)
     
     # Check if head and tail sequences are correct
-    # head should be last 1 of GAG (start - 2) + first 3 of CTG (start - 1) = "GCTG"
-    # tail should be last 3 of TGC (end + 1) + first 1 of CGG (end + 2) = "TGCC"
+    # head: last 1 of GAG (start - 2) + first 3 of CTG (start - 1) = "GCTG"
+    # tail: last 3 of TGC (end + 1) + first 1 of CGG (end + 2) = "TGCC"
     expect_equal(result$head, "GCTG")
     expect_equal(result$tail, "TGCC")
 })
@@ -117,17 +129,19 @@ test_that("get_overhangs returns character strings when as_dna_strings is FALSE"
 })
 
 test_that("get_overhangs handles invalid input", {
-    # Invalid codon test might be more appropriate for a function that validates codons,
-    # so adjust these tests according to the actual capabilities of your function
-    gene_codons <- c("GAG", "CTG", "XTG", "AGT", "GAA", "TGG")  # 'X' is an invalid nucleotide
-    expect_error(get_overhangs(gene_codons, 3, 4, FALSE), "Invalid codon detected.")
+    # 'X' is an invalid nucleotide
+    gene_codons <- c("GAG", "CTG", "XTG", "AGT", "GAA", "TGG")
+    expect_error(get_overhangs(gene_codons, 3, 4, FALSE), 
+                 "Invalid codon detected.")
     
     # Test for out of bounds start and end positions
     gene_codons <- c("GAG", "CTG", "TGT")
     # start <= 2
-    expect_error(get_overhangs(gene_codons, 0, 4, FALSE), "Invalid start or end positions.")
+    expect_error(get_overhangs(gene_codons, 0, 4, FALSE), 
+                 "Invalid start or end positions.")
     # end + 2 > length(gene_codons)
-    expect_error(get_overhangs(gene_codons, 2, 4, FALSE), "Invalid start or end positions.")  
+    expect_error(get_overhangs(gene_codons, 2, 4, FALSE), 
+                 "Invalid start or end positions.")  
 })
 
 
@@ -298,8 +312,12 @@ test_that("optimize_position returns a value within specified range", {
     left <- 7
     right <- 10
     
-    optimized_pos_greedy <- optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, TRUE)
-    optimized_pos_mcmc <- optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, FALSE)
+    optimized_pos_greedy <- optimize_position(gene_codons, tile_length,
+                                              pos_lst, curr_pos, 
+                                              left, right, TRUE)
+    optimized_pos_mcmc <- optimize_position(gene_codons, tile_length, 
+                                            pos_lst, curr_pos, 
+                                            left, right, FALSE)
     
     # Check if the optimized positions are within the range
     expect_true(optimized_pos_greedy %in% left:right)
@@ -316,8 +334,10 @@ test_that("optimize_position handles edge cases", {
     right <- 6  # Right boundary same as current position
     
     # Test should pass without throwing an error and return the same position
-    expect_equal(optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, TRUE), curr_pos)
-    expect_equal(optimize_position(gene_codons, tile_length, pos_lst, curr_pos, left, right, FALSE), curr_pos)
+    expect_equal(optimize_position(gene_codons, tile_length, pos_lst, 
+                                   curr_pos, left, right, TRUE), curr_pos)
+    expect_equal(optimize_position(gene_codons, tile_length, pos_lst, 
+                                   curr_pos, left, right, FALSE), curr_pos)
 })
 
 
@@ -326,14 +346,20 @@ test_that("optimize_position handles edge cases", {
 # Helper function to randomly generate testing examples
 generate_random_dna_sequence <- function(num_codons) {
     if (num_codons <= 1) {
-        stop("Number of codons must be greater than 1 to include 'ATG' as the second codon.")
+        stop("Number of codons must be greater than 1 to include
+             'ATG' as the second codon.")
     }
     
     # Generate the first codon randomly
-    first_codon <- paste(sample(c("A", "T", "G", "C"), size = 3, replace = TRUE), collapse = "")
+    first_codon <- paste(sample(c("A", "T", "G", "C"), 
+                                size = 3, replace = TRUE),
+                         collapse = "")
     
-    # Generate the rest of the sequence randomly, excluding the first and second codon
-    remaining_sequence <- paste(sample(c("A", "T", "G", "C"), size = (num_codons - 2) * 3, replace = TRUE), 
+    # Generate the rest of the sequence randomly, excluding the first and 
+    # second codon
+    remaining_sequence <- paste(sample(c("A", "T", "G", "C"), 
+                                       size = (num_codons - 2) * 3, 
+                                       replace = TRUE), 
                                 collapse = "")
     
     # Concatenate the first codon, 'ATG', and the remaining sequence

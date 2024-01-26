@@ -83,7 +83,7 @@ browseVignettes("TRexDAD")
 
 `TRexDAD` contains 10 functions. Since they are all parts of an
 integrated pipeline, they are go to one R script, `pipeline.R`. Here are
-the workflow illustration and detailed explaination of them.
+the workflow illustration and detailed explanation of them.
 
 <figure>
 <img src="inst/extdata/pipeline_workflow.png" alt="Pipeline Workflow" />
@@ -121,7 +121,7 @@ the workflow illustration and detailed explaination of them.
 7.  ***calculate_local_score*** calculates a score for a specific tile
     within a gene sequence. The score is based on palindromicity, length
     variation from a global standard, and on-target reactivity, using a
-    pre-defined overhang fidelity dataframe.
+    pre-defined overhang fidelity data frame.
 
 8.  ***calculate_global_score*** calculates a global score for a list of
     positions in a gene sequence. The score takes into account
@@ -154,18 +154,23 @@ but they can also be used indepently for specific tasks.
 `Biostrings` R package is used for calculating reverse complement of
 overhangs in the *get_overhangs* function.
 
-`readxl` R package is used for reading excel file
-`overhang_fidelity.xlsx` containing tested overhangs’s reactivity
-against each other. `overhang_fidelity.xlsx` is from the study by New
-England Biolabs [(Pryor et al.,
-2020)](https://doi.org/10.1371/journal.pone.0238592).
-
 `forstringr` R package is used for manipulating splitted target gene (a
 list of codons) in the *get_overhangs* function.
 
-The `stats` R package is used for optimizing gene tile length and number
-of tiles. It is used in *calculate_optimal_tiles* function and
-*execute_and_plot* function.
+`ggplot2` and `scales` R packages are used in producing plot for the
+optimization progress. It is used in *execute_and_plot* and the
+vignette.
+
+`shiny` and `shinythemes` R packages are used in `app.R` for shiny app
+development and formatting.
+
+The `utils` R package (included in R) is used for producing combinations
+of overhangs and reading excel file `overhang_fidelity.csv`. It is used
+in  
+*calculate_global_score* function and the first section of `pipeline.R`.
+
+`overhang_fidelity.csv` is from the study by New England Biolabs [(Pryor
+et al., 2020)](https://doi.org/10.1371/journal.pone.0238592).
 
 ## References
 
@@ -185,22 +190,41 @@ of tiles. It is used in *calculate_optimal_tiles* function and
   Math.*, **284**, 87–95.
   [DOI:10.1134/S0081543814040101](https://doi.org/10.1134/S0081543814040101)
 
+- Hastings, W. K. Monte Carlo sampling methods using Markov chains and
+  their applications (1970). *Biometrika 57*, 97–109.
+
+- Alberts B., Johnson A., Lewis J., et al. Molecular Biology of the Cell
+  (2014). *Garland Science*. **6th edition**.
+
 - Pagès H, Aboyoun P, Gentleman R, DebRoy S (2023). Biostrings:
   Efficient manipulation of biological strings. Bioconductor.
   [doi:10.18129/B9.bioc.Biostrings](https://doi.org/10.18129/B9.bioc.Biostrings),
   R package version 2.68.1,
   [Biostrings](https://bioconductor.org/packages/Biostrings).
 
-- Wickham H, Bryan J (2023). readxl: Read Excel Files. R package version
-  1.4.3, [CRAN](https://CRAN.R-project.org/package=readxl).
-
 - Ogundepo E (2023). forstringr: String Manipulation Package for Those
   Familiar with ‘Microsoft Excel’. R package version 1.0.0,
   [CRAN](https://CRAN.R-project.org/package=forstringr).
 
+- Wickham H (2016). ggplot2: Elegant Graphics for Data Analysis.
+  Springer-Verlag New York.
+  [doi:10.1007/978-3-319-24277-4](https://doi.org/10.1007/978-3-319-24277-4),
+  R package version 3.3.5, [ggplot2](https://ggplot2.tidyverse.org).
+
+- Chang W, Cheng J, Allaire JJ, Xie Y, McPherson J (2021). shiny: Web
+  Application Framework for R. R package version 1.7.1,
+  [shiny](https://shiny.rstudio.com).
+
+- Chang W, Ribeiro BB (2021). shinythemes: Themes for Shiny. R package
+  version 1.2.0,
+  [shinythemes](https://CRAN.R-project.org/package=shinythemes).
+
+- Wickham H, Seidel D (2020). scales: Scale Functions for Visualization.
+  R package version 1.1.1, [scales](https://scales.r-lib.org).
+
 - R Core Team (2023). R: A Language and Environment for Statistical
-  Computing. R Foundation for Statistical Computing, Vienna, Austria. [R
-  Project](https://www.R-project.org/).
+  Computing. R Foundation for Statistical Computing, Vienna, Austria.
+  [RProject](https://www.R-project.org/).
 
 ## Acknowledgements
 
@@ -218,7 +242,8 @@ those who provided feedback to improve this package.
 The main objective of the package is to find the optimal assembly design
 for mutagenizing a gene of interest. For illustration purposes, it is
 set to Rad27 by default; but users are encouraged to use this tool for
-any genes of interest.
+any genes of interest with an ORF which is at least 60 condons in
+length.
 
 To initiate workflow with the default gene of interest, run:
 

@@ -72,9 +72,10 @@ ui <- fluidPage(
         mainPanel(
             tabsetPanel(
                 tabPanel("Plot", plotOutput("score_plot")),
+                tabPanel("Assembly Position", verbatimTextOutput("final_pos")),
                 tabPanel("Optimal Tiles", 
                          verbatimTextOutput("optimal_tiles_output")),
-                tabPanel("Codons", verbatimTextOutput("codons_output")),
+                tabPanel("Gene Codons", verbatimTextOutput("codons_output")),
                 tabPanel("Oligo Cost", verbatimTextOutput("oligo_cost_output")),
                 tabPanel("Overhang Fidelity", 
                          verbatimTextOutput("overhang_fidelity_output"))
@@ -88,8 +89,31 @@ server <- function(input, output) {
     observeEvent(input$run_optimization, {
         # Input validation
         
+        # Verify that the sequence only contains valid nucleotides
+        if(!grepl("^[ACGT]+$", input$gene_sequence)) {
+            stop("Invalid gene sequence: sequence should only contain A, C, G, and T.")
+        }
+        
+        # Check if the length of the sequence is a multiple of 3
+        if (nchar(input$gene_sequence) %% 3 != 0) {
+            stop("Invalid gene sequence length: length should be a multiple of 3.")
+        }
+        
+        # Ensure 'ATG' is the second codon
+        if (substr(input$gene_sequence, 4, 6) != "ATG") {
+            stop("Invalid sequence: 'ATG' is not the second codon.")
+        }
+        
         # Convert the gene sequence into codons
         gene_codons <- split_into_codons(input$gene_sequence)
+        
+        # Check if the number of codons is 60 or less
+        # an ORF would typically need to be at least 60-90 nucleotides long to 
+        # encode a functional protein of minimal size.
+        if (length(gene_codons) < 60) {
+            stop("Target gene produces 60 or fewer codons, which is insufficient 
+             for the optimization process.")
+        }
         
         # Calculate optimal tiles
         optimal_tiles_result <- calculate_optimal_tiles(length(gene_codons))
@@ -122,6 +146,10 @@ server <- function(input, output) {
         
         output$score_plot <- renderPlot({
             result$plot
+        })
+        
+        output$final_pos <- renderPrint({
+            result$final_position
         })
     })
 }

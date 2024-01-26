@@ -31,7 +31,8 @@ mutation scanning (DMS), by harnessing data-optimized assembly design (DAD).
 
 ## Description
 
-Deep Mutational Scanning (DMS) is a technique that combines mutagenesis, high-throughput sequencing, and functional assays to measure the effects of 
+Deep Mutational Scanning (DMS) is a technique that combines mutagenesis, 
+high-throughput sequencing, and functional assays to measure the effects of 
 a large number of genetic variants on a protein's function or phenotype. 
 In order to assess variants, generating a library of mutants is necessary. 
 Tile Region Exchange (T-Rex) Mutagenesis is a high-throughput method to 
@@ -44,7 +45,8 @@ not merely depend on mere rules. Therefore, a data-driven solution
 is required for designing oligonucleotides with high correct assembly 
 rate [(Pryor et al., 2020)](https://doi.org/10.1371/journal.pone.0238592). 
 Although there are web tools currently available for similar mutagenesis 
-procedures, few of them utilize Data-optimized Assembly Design.`TRexDAD` is a streamlined tool that facilitates oligonucleotide design for T-Rex by 
+procedures, few of them utilize Data-optimized Assembly Design.`TRexDAD` is a 
+streamlined tool that facilitates oligonucleotide design for T-Rex by 
 harnessing DAD techniques, along with visualization of the optimization process. 
 
 The package is for researchers who perform Tile Region Exchange Mutagenesis 
@@ -54,7 +56,8 @@ data processing, overhang fidelity score calculations, and optimization of
 gene tile locations, along with a visualization of the change in fidelity 
 score of resulting overhangs from oligonucleotide designs. The scope of 
 the R package is to improve the work flow in T-Rex Mutagenesis regarding 
-efficiency and accuracy, facilitating open-source researches for interested bioinformatitians and computational biologists. The `TRexDAD` package was 
+efficiency and accuracy, facilitating open-source researches for interested 
+bioinformatitians and computational biologists. The `TRexDAD` package was 
 developed using `R version 4.3.1 (2023-06-16)`, 
 `Platform: aarch64-apple-darwin20 (64-bit)` and 
 `Running under: macOS Sonoma 14.1.1`.
@@ -72,11 +75,11 @@ devtools::install_github("yunyicheng/TRexDAD", build_vignettes = TRUE)
 library("TRexDAD")
 ```
 
-<!-- To run the Shiny app: -->
+To run the Shiny app:
 
-<!-- ``` r -->
-<!-- runTestingPackage() # not for Assessment 4; only for Assessment 5 -->
-<!-- ``` -->
+``` {r results='hide', message=FALSE, warning=FALSE}
+TRexDAD::run_TRexDAD()
+```
 
 ## Package Overview
 
@@ -142,7 +145,9 @@ Markov Chain Monte Carlo (MCMC) approaches.
 
 The author of the package is Yunyi Cheng. 
 
-The author wrote the *execute_and_plot* function, which performs an optimization process to determine the optimal tile positions in a gene sequence and plots the 
+The author wrote the *execute_and_plot* function, which performs an 
+optimization process to determine the optimal tile positions in a gene 
+sequence and plots the 
 change in the score over iterations. 
 
 Other user-accessible functions are also developed by the author. Most of them 
@@ -155,8 +160,15 @@ in the *get_overhangs* function.
 `forstringr` R package is used for manipulating splitted target gene 
 (a list of codons) in the *get_overhangs* function.
 
+`ggplot2` and `scales` R packages are used in producing plot for the 
+optimization progress. It is used in *execute_and_plot* and the vignette.
+
+`shiny` and `shinythemes` R packages are used in `app.R` for shiny app
+development and formatting.
+
 The `utils` R package (included in R) is used for producing combinations
-of overhangs and reading excel file `overhang_fidelity.csv`. It is used in  *calculate_global_score* function and the first section of `pipeline.R`.
+of overhangs and reading excel file `overhang_fidelity.csv`. It is used in  
+*calculate_global_score* function and the first section of `pipeline.R`.
 
 `overhang_fidelity.csv` is from the study by New England Biolabs 
 [(Pryor et al., 2020)](https://doi.org/10.1371/journal.pone.0238592).
@@ -165,7 +177,8 @@ of overhangs and reading excel file `overhang_fidelity.csv`. It is used in  *cal
 ## References
 
 - Pryor JM, Potapov V, Kucera RB, Bilotti K, Cantor EJ, Lohman GJS (2020). 
-Enabling one-pot Golden Gate assemblies of unprecedented complexity using data-optimized assembly design. *PLOS ONE*, **15**(9), e0238592. [doi:10.1371/journal.pone.0238592](doi:10.1371/journal.pone.0238592)
+Enabling one-pot Golden Gate assemblies of unprecedented complexity 
+using data-optimized assembly design. *PLOS ONE*, **15**(9), e0238592. [doi:10.1371/journal.pone.0238592](doi:10.1371/journal.pone.0238592)
 
 - Potapov V, Ong JL, Kucera RB, Langhorst BW, Bilotti K, Pryor JM, Cantor EJ, 
 Canton B, Knight TF, Evans TC Jr, Lohman GJS (2018). 
@@ -177,7 +190,8 @@ ligase and application to DNA assembly.
 minimum weight of vertices and edges (2014). 
 *Proc. Steklov Inst. Math.*, **284**, 87–95. [DOI:10.1134/S0081543814040101](https://doi.org/10.1134/S0081543814040101)
 
-- Hastings, W. K. Monte Carlo sampling methods using Markov chains and their applications (1970). *Biometrika 57*, 97–109.
+- Hastings, W. K. Monte Carlo sampling methods using Markov 
+chains and their applications (1970). *Biometrika 57*, 97–109.
 
 - Alberts B., Johnson A., Lewis J., et al. Molecular Biology of the Cell (2014). 
 *Garland Science*. **6th edition**.
@@ -187,25 +201,43 @@ Biostrings: Efficient manipulation of biological strings. Bioconductor. [doi:10.
 R package version 2.68.1, 
 [Biostrings](https://bioconductor.org/packages/Biostrings).
 
-- Wickham H, Bryan J (2023). readxl: Read Excel Files. 
-R package version 1.4.3, [CRAN](https://CRAN.R-project.org/package=readxl).
-
 - Ogundepo E (2023). forstringr: String Manipulation Package for Those Familiar 
-with 'Microsoft Excel'. R package version 1.0.0, [CRAN](https://CRAN.R-project.org/package=forstringr).
+with 'Microsoft Excel'. R package version 1.0.0, 
+[CRAN](https://CRAN.R-project.org/package=forstringr).
+
+- Wickham H (2016). ggplot2: Elegant Graphics for Data Analysis. 
+Springer-Verlag New York. 
+[doi:10.1007/978-3-319-24277-4](https://doi.org/10.1007/978-3-319-24277-4), 
+R package version 3.3.5, [ggplot2](https://ggplot2.tidyverse.org).
+
+- Chang W, Cheng J, Allaire JJ, Xie Y, McPherson J (2021). 
+shiny: Web Application Framework for R. R package version 1.7.1, 
+[shiny](https://shiny.rstudio.com).
+
+- Chang W, Ribeiro BB (2021). shinythemes: Themes for Shiny. 
+R package version 1.2.0, 
+[shinythemes](https://CRAN.R-project.org/package=shinythemes).
+
+- Wickham H, Seidel D (2020). scales: Scale Functions for Visualization. 
+R package version 1.1.1, [scales](https://scales.r-lib.org).
 
 - R Core Team (2023). R: A Language and Environment for Statistical Computing. 
-R Foundation for Statistical Computing, Vienna, Austria. [RProject](https://www.R-project.org/).
+R Foundation for Statistical Computing, Vienna, Austria. 
+[RProject](https://www.R-project.org/).
 
 ## Acknowledgements
 
-This package was developed as part of an assessment for 2023 BCB410H: Applied Bioinformatics course at the University of Toronto, Toronto, CANADA. 
+This package was developed as part of an assessment for 2023 BCB410H: 
+Applied Bioinformatics course at the University of Toronto, Toronto, CANADA. 
 
 `TRexDAD` welcomes issues, enhancement requests, and other contributions. 
-To submit an issue, use the [GitHub issues](https://github.com/yunyicheng/TRexDAD/issues). 
+To submit an issue, use the 
+[GitHub issues](https://github.com/yunyicheng/TRexDAD/issues). 
 Many thanks to those who provided feedback to improve this package.
 
 ## Example Workflow Usage
-The main objective of the package is to find the optimal assembly design for mutagenizing a gene of interest. For illustration purposes, it is set to 
+The main objective of the package is to find the optimal assembly design for 
+mutagenizing a gene of interest. For illustration purposes, it is set to 
 Rad27 by default; but users are encouraged to use this tool for any genes of 
 interest with an ORF which is at least 60 condons in length.
 

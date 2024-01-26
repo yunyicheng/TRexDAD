@@ -1,3 +1,10 @@
+# Purpose: Pipeline Implementation
+# Author: Yunyi Cheng
+# Date: 01.07.2024
+# Version: 1.0.0
+# Bugs and Issues: N/A
+
+
 # --- SECTION: Setup and Global Variable Initialization -----------------
 
 
@@ -677,4 +684,3 @@ execute_and_plot <- function(target_gene = RAD_27,
     return(list(plot = plot,
                 final_position = pos))
 }
-# execute_and_plot(max_iter = 3)

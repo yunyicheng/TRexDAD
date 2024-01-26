@@ -1,6 +1,6 @@
 Package: TRexDAD
 Title: Data-driven Pipeline for Tile Region Exchange Assembly Design
-Version: 0.1.0
+Version: 1.0.0
 Author: Yunyi Cheng
 Maintainer: Yunyi Cheng <yunyi.cheng@outlook.com>
 Description: 
@@ -16,7 +16,9 @@ Imports:
     Biostrings,
     forstringr,
     ggplot2,
-    shiny
+    shiny,
+    shinythemes,
+    scales
 Depends: 
     R (>= 3.5.0)
 URL: https://github.com/yunyicheng/TRexDAD
