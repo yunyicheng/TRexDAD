@@ -274,6 +274,7 @@ vignettes.
 
 The package tree structure is provided below:
 
+``` r
 📦TRexDAD
  ┣ 📂R
  ┃ ┣ 📜pipeline.R
@@ -319,3 +320,4 @@ The package tree structure is provided below:
  ┣ 📜README.Rmd
  ┣ 📜README.md
  ┗ 📜TRexDAD.Rproj
+```

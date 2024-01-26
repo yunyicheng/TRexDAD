@@ -261,16 +261,50 @@ vignettes.
 
 The package tree structure is provided below:
 
-📦TRexDAD ┣ 📂R ┃ ┣ 📜pipeline.R ┃ ┗ 📜run_TRexDAD.R ┣ 📂inst ┃ ┣
-📂extdata ┃ ┃ ┣ 📜TRex_overview.png ┃ ┃ ┣ 📜overhang_fidelity.csv ┃ ┃ ┗
-📜pipeline_workflow.png ┃ ┣ 📂shiny_script ┃ ┃ ┗ 📜app.R ┃ ┗ 📜CITATION
-┣ 📂man ┃ ┣ 📂figures ┃ ┃ ┗ 📜README-unnamed-chunk-4-1.png ┃ ┣
-📜calculate_global_score.Rd ┃ ┣ 📜calculate_local_score.Rd ┃ ┣
-📜calculate_optimal_tiles.Rd ┃ ┣ 📜execute_and_plot.Rd ┃ ┣
-📜get_all_overhangs.Rd ┃ ┣ 📜get_overhangs.Rd ┃ ┣ 📜oligo_cost.Rd ┃ ┣
-📜optimize_position.Rd ┃ ┣ 📜pick_position.Rd ┃ ┣ 📜run_TRexDAD.Rd ┃ ┗
-📜split_into_codons.Rd ┣ 📂tests ┃ ┣ 📂testthat ┃ ┃ ┗ 📜test_pipeline.R
-┃ ┗ 📜testthat.R ┣ 📂vignettes ┃ ┣ 📜.gitignore ┃ ┣ 📜tutorial_TRexDAD.R
-┃ ┣ 📜tutorial_TRexDAD.Rmd ┃ ┗ 📜tutorial_TRexDAD.html ┣ 📜.RData ┣
-📜.Rbuildignore ┣ 📜.Rhistory ┣ 📜.gitignore ┣ 📜DESCRIPTION ┣ 📜LICENSE
-┣ 📜NAMESPACE ┣ 📜README.Rmd ┣ 📜README.md ┗ 📜TRexDAD.Rproj
+``` r
+📦TRexDAD
+ ┣ 📂R
+ ┃ ┣ 📜pipeline.R
+ ┃ ┗ 📜run_TRexDAD.R
+ ┣ 📂inst
+ ┃ ┣ 📂extdata
+ ┃ ┃ ┣ 📜TRex_overview.png
+ ┃ ┃ ┣ 📜overhang_fidelity.csv
+ ┃ ┃ ┗ 📜pipeline_workflow.png
+ ┃ ┣ 📂shiny_script
+ ┃ ┃ ┗ 📜app.R
+ ┃ ┗ 📜CITATION
+ ┣ 📂man
+ ┃ ┣ 📂figures
+ ┃ ┃ ┗ 📜README-unnamed-chunk-4-1.png
+ ┃ ┣ 📜calculate_global_score.Rd
+ ┃ ┣ 📜calculate_local_score.Rd
+ ┃ ┣ 📜calculate_optimal_tiles.Rd
+ ┃ ┣ 📜execute_and_plot.Rd
+ ┃ ┣ 📜get_all_overhangs.Rd
+ ┃ ┣ 📜get_overhangs.Rd
+ ┃ ┣ 📜oligo_cost.Rd
+ ┃ ┣ 📜optimize_position.Rd
+ ┃ ┣ 📜pick_position.Rd
+ ┃ ┣ 📜run_TRexDAD.Rd
+ ┃ ┗ 📜split_into_codons.Rd
+ ┣ 📂tests
+ ┃ ┣ 📂testthat
+ ┃ ┃ ┗ 📜test_pipeline.R
+ ┃ ┗ 📜testthat.R
+ ┣ 📂vignettes
+ ┃ ┣ 📜.gitignore
+ ┃ ┣ 📜tutorial_TRexDAD.R
+ ┃ ┣ 📜tutorial_TRexDAD.Rmd
+ ┃ ┗ 📜tutorial_TRexDAD.html
+ ┣ 📜.RData
+ ┣ 📜.Rbuildignore
+ ┣ 📜.Rhistory
+ ┣ 📜.gitignore
+ ┣ 📜DESCRIPTION
+ ┣ 📜LICENSE
+ ┣ 📜NAMESPACE
+ ┣ 📜README.Rmd
+ ┣ 📜README.md
+ ┗ 📜TRexDAD.Rproj
+```
